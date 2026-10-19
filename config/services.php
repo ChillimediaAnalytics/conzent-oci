@@ -59,6 +59,9 @@ return [
     TwigEnvironment::class => static function (ContainerInterface $c): TwigEnvironment {
         $basePath = $c->get('config.base_path');
         $debug = $c->get('config.debug');
+        // The var volume survives image updates. Isolate compiled templates
+        // by release so a new FPM process never loads a prior image's Twig PHP.
+        $templateRelease = hash('sha256', (string) ($_ENV['RELEASE'] ?? 'default'));
 
         $loader = new FilesystemLoader($basePath . '/templates');
 
@@ -71,7 +74,7 @@ return [
         }
 
         $twig = new TwigEnvironment($loader, [
-            'cache' => $debug ? false : $basePath . '/var/cache/twig',
+            'cache' => $debug ? false : $basePath . '/var/cache/twig/' . $templateRelease,
             'debug' => $debug,
             'strict_variables' => false,
             'auto_reload' => $debug,

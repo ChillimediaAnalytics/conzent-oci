@@ -1,0 +1,59 @@
+{
+  "timestamp_utc": "2026-10-19T15:59:07.306621+00:00",
+  "image_id": "sha256:36243da432a0f0a3b56dc3240ecee9b159108d71305e7c064d987a20a465bfde",
+  "container_image_ref": "sha256:36243da432a0f0a3b56dc3240ecee9b159108d71305e7c064d987a20a465bfde",
+  "nonroot_uid": "www-data",
+  "resources": {
+    "memory_limit_bytes": 268435456,
+    "nano_cpus": 500000000
+  },
+  "port_bindings": {
+    "8080/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "3092"
+      }
+    ]
+  },
+  "wordpress_version": "7.1.3",
+  "plugins": [
+    {
+      "name": "akismet",
+      "status": "inactive",
+      "version": "5.7.2"
+    },
+    {
+      "name": "chilli-consent",
+      "status": "active",
+      "version": "2.2.4.1"
+    },
+    {
+      "name": "hello",
+      "status": "inactive",
+      "version": "1.7.2"
+    },
+    {
+      "name": "wp-consent-api",
+      "status": "active",
+      "version": "2.1.0"
+    },
+    {
+      "name": "chilli-banner-observer",
+      "status": "must-use",
+      "version": ""
+    },
+    {
+      "name": "chilli-consent-qa",
+      "status": "must-use",
+      "version": ""
+    }
+  ],
+  "visitor_http_status": 200,
+  "visitor_loader_count": 1,
+  "visitor_loader_uses_real_test_site_key": true,
+  "real_banner_observation_fixture_present": true,
+  "synthetic_test_not_on_default_page": true,
+  "public_url": "https://consent.chillimedia.se/__wordpress_qa/",
+  "live_api_verification": "pending-public-host-cutover",
+  "customer_websites_modified": false
+}
