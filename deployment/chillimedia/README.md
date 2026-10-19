@@ -2,6 +2,8 @@
 
 Agency-operated deployment of the Conzent OCI fork. The existing upstream dashboard is retained; the login/nav branding is Chilli Consent. The Apache license/NOTICE remain. Cloud-only agency portal, billing, A/B tests and revenue features are not added. TCF is disabled (`CMP_ID=0`); no upstream CMP certification is claimed.
 
+[Verified release checks and operating limits](VALIDATION.md).
+
 ## Services and boundaries
 
 Compose project `chilli-conzent` runs on the existing Oderland Cloud host. Its only host listener is `127.0.0.1:3091`, behind the dedicated `consent.chillimedia.se` host proxy. MariaDB, Redis and scanner have no published ports. Scan concurrency is one. Container memory/CPU limits suit a small pilot, not an untested client-volume promise. ChilliGPT/Blikk services and main `chillimedia.se` routes are independent.

@@ -5,7 +5,7 @@
   "source_url": "https://downloads.wordpress.org/plugin/getconzent-cmp-cookie-banner-consent-management.2.2.4.zip",
   "source_sha256": "d9c5fd0cf3c96334c5b22b05147fd2d4e1d7ea38f65aedf8fe0dfc25e641b5b7",
   "retrieved_date": "2026-10-19",
-  "fork_version": "2.2.4.1",
+  "fork_version": "2.2.4.2",
   "fork_slug": "chilli-consent",
   "fixed_service_url": "https://consent.chillimedia.se",
   "license": "GPL-3.0-or-later",

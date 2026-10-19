@@ -8,7 +8,7 @@
  * Plugin Name: Chilli Consent
  * Plugin URI: https://consent.chillimedia.se/
  * Description: Connect this WordPress website to the Chillimedia consent dashboard. Includes cookie-banner loading, WordPress Consent API and Google Site Kit integration.
- * Version: 2.2.4.1
+ * Version: 2.2.4.2
  * Requires at least: 5.8
  * Tested up to: 7.1.2
  * Requires PHP: 7.4
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GETCONZENT_CMP_PLUGIN_VERSION', '2.2.4.1' );
+define( 'GETCONZENT_CMP_PLUGIN_VERSION', '2.2.4.2' );
 define( 'GETCONZENT_CMP_PLUGIN_FILE', __FILE__ );
 define( 'GETCONZENT_CMP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GETCONZENT_CMP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -81,6 +81,8 @@ register_activation_hook( __FILE__, 'getconzent_cmp_activate' );
 register_deactivation_hook( __FILE__, 'getconzent_cmp_deactivate' );
 
 add_filter( 'wp_consent_api_registered_' . plugin_basename( __FILE__ ), '__return_true' );
+add_filter( 'wp_get_consent_type', 'getconzent_cmp_default_consent_type', PHP_INT_MAX );
+add_filter( 'wp_has_consent', 'getconzent_cmp_php_consent', PHP_INT_MAX, 3 );
 
 /* --- Activation ------------------------------------------------------- */
 
@@ -220,6 +222,37 @@ function getconzent_cmp_is_google_site_kit(): bool {
 	return is_plugin_active( 'google-site-kit/google-site-kit.php' );
 }
 
+/** Empty WP Consent API types mean consent is unmanaged and allow everything. */
+function getconzent_cmp_default_consent_type( $consent_type = '' ): string {
+	return 'optout' === $consent_type ? 'optout' : 'optin';
+}
+
+/** Keep server-side consumers aligned with the saved CMP decision. */
+function getconzent_cmp_php_consent( $has_consent, $category, $requested_by = null ): bool {
+	if ( 'functional' === $category ) {
+		return true; // WordPress uses functional for strictly necessary storage.
+	}
+	$map = array(
+		'preferences' => array( 'functional', 'preferences' ),
+		'statistics' => array( 'analytics' ),
+		'statistics-anonymous' => array( 'analytics' ),
+		'marketing' => array( 'marketing' ),
+	);
+	if ( ! isset( $map[ $category ] ) ) {
+		return (bool) $has_consent;
+	}
+	if ( empty( $_COOKIE['conzentConsent'] ) || ! is_string( $_COOKIE['conzentConsent'] ) ) {
+		return function_exists( 'wp_get_consent_type' ) && 'optout' === wp_get_consent_type();
+	}
+	$raw = isset( $_COOKIE['conzentConsentPrefs'] ) && is_string( $_COOKIE['conzentConsentPrefs'] )
+		? wp_unslash( $_COOKIE['conzentConsentPrefs'] ) : '[]';
+	$preferences = json_decode( $raw, true );
+	if ( ! is_array( $preferences ) ) {
+		return false;
+	}
+	return count( array_intersect( $map[ $category ], array_filter( $preferences, 'is_string' ) ) ) > 0;
+}
+
 /* --- Frontend assets -------------------------------------------------- */
 
 function getconzent_cmp_enqueue_frontend(): void {
@@ -234,20 +267,12 @@ function getconzent_cmp_enqueue_frontend(): void {
 		GETCONZENT_CMP_PLUGIN_VERSION,
 		'screen'
 	);
-	wp_enqueue_script(
-		'getconzent-cmp-banner',
-		GETCONZENT_CMP_PLUGIN_URL . 'assets/js/conzent-banner.js',
-		array(),
-		GETCONZENT_CMP_PLUGIN_VERSION,
-		true
-	);
-
 	if ( getconzent_cmp_is_wp_consent_api() ) {
-		wp_add_inline_script( 'getconzent-cmp-banner', 'const _gcWca = true;', 'before' );
-		if ( getconzent_cmp_is_google_site_kit() ) {
-			wp_add_inline_script( 'getconzent-cmp-banner', 'const _gcGsk = true;', 'before' );
-		}
+		// Runs directly after the API script, before its dependent consumers.
+		// The bridge itself was printed at wp_head priority 0.
+		wp_add_inline_script( 'wp-consent-api', 'if(window.chilliConsentSync){window.chilliConsentSync();}', 'after' );
 	}
+
 }
 
 /**
@@ -287,6 +312,14 @@ function getconzent_cmp_print_loader(): void {
 		return;
 	}
 
+	$default_type = function_exists( 'wp_get_consent_type' )
+		? getconzent_cmp_default_consent_type( wp_get_consent_type() ) : 'optin';
+	$bridge = add_query_arg( 'ver', GETCONZENT_CMP_PLUGIN_VERSION, GETCONZENT_CMP_PLUGIN_URL . 'assets/js/conzent-banner.js' );
+	// Establish WP Consent API state before the asynchronous banner or other
+	// head consumers. The synchronous bridge replays saved choices when the API
+	// script becomes available and whenever the real banner announces readiness.
+	echo '<script id="chilli-consent-defaults">window.chilliConsentDefaultType=' . wp_json_encode( $default_type ) . ';window.wp_consent_type=window.chilliConsentDefaultType;</script>' . "\n";
+	echo '<script src="' . esc_url( $bridge ) . '" data-no-optimize="1" data-no-defer="1" data-cfasync="false" nowprocket></script>' . "\n";
 	$src = getconzent_cmp_get_server_url() . '/c/consent.js';
 
 	// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must print inline at a guaranteed position; see docblock.

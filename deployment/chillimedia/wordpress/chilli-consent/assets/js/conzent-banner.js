@@ -1,116 +1,58 @@
-const consentType = {
-    gdpr: 'optin',
-    ccpa: 'optout',
-};
-const categoryMap = {
-    functional: 'preferences',
-    analytics: ['statistics','statistics-anonymous'],
-    performance: 'functional',
-    marketing: 'marketing',
-};
-const gskEnabled = typeof _gcGsk !== 'undefined' && _gcGsk ? _gcGsk : false;
-// Read the asynchronously loaded banner at event time, not at footer load.
-
-const _accessConzentCookie = (name) => {
-	const conzent_cookies = document.cookie.split(";").reduce((acc, cookieString) => {
-		const [key, value] = cookieString.split("=").map((s) => s.trim());
-		if (key && value) {
-			try { acc[key] = decodeURIComponent(value); } catch (e) { acc[key] = value; }
-		}
-		return acc;
-	}, {});
-	return name ? conzent_cookies[name] || false : conzent_cookies;
-};
-window._getCnzConsent = function () {
-    
-    const cookieConsent = {
-      activeLaw: "",
-      categories: Object.fromEntries(['necessary','analytics','marketing','functional','preferences','performance','unclassified'].map(category => [category, false])),
-      isUserActionCompleted: false,
-      consentID: "",
-      languageCode: ""
+/** Chilli Consent bridge: defaults exist before async banner and API consumers. */
+(function () {
+    const categoryMap = {
+        preferences: ['functional', 'preferences'],
+        statistics: ['analytics'],
+        'statistics-anonymous': ['analytics'],
+        marketing: ['marketing'],
     };
-		
-    try {
+    const readCookies = function () {
+        const cookies = {};
+        document.cookie.split(';').forEach(function (part) {
+            const index = part.indexOf('=');
+            if (index < 0) return;
+            const name = part.slice(0, index).trim();
+            const raw = part.slice(index + 1).trim();
+            try { cookies[name] = decodeURIComponent(raw); } catch (error) { cookies[name] = raw; }
+        });
+        return cookies;
+    };
+    window._getCnzConsent = function () {
+        const cookies = readCookies();
         const banner = window.conzent;
-        cookieConsent.activeLaw = banner._Store._bannerConfig.default_laws;
-        Object.keys(cookieConsent.categories).forEach(category => {
-              cookieConsent.categories[category] = _checkCookieCat(category) === "yes";   
-         });
-  
-        cookieConsent.isUserActionCompleted = _consentExists("conzentConsent");
-        cookieConsent.consentID = _accessConzentCookie("conzent_id") || "";
-        cookieConsent.languageCode = banner._Store._bannerConfig.currentLang || "";
-    } catch (e) {}
-    return cookieConsent;
-};
-function _consentExists(cookieName){
-    if(Object.prototype.hasOwnProperty.call(_accessConzentCookie(), cookieName)){
-        return true;
-    }
-    return false;
-}
-function _checkCookieCat(field){
-
-	var _preferences_val = _accessConzentCookie("conzentConsentPrefs"),
-	 _preferences_item;
-
-	 try {
-		_preferences_item = JSON.parse(_preferences_val);
-	 } catch (e) {
-		_preferences_item = null;
-	 }
-
-	 if(_preferences_item){
-
-		return _preferences_item.includes(field)? 'yes' : "";
-
-	 }
-
-	 return "";
-
-}
-document.addEventListener("conzentck_consent_update", function () {
-    
-    const consentData = _getCnzConsent();
-    const categories = consentData.categories;
-    
-    if ((consentData.isUserActionCompleted === false) && gskEnabled && !Object.values(categories).includes(true)) {
-        return;
-    }
-    window.wp_consent_type = consentData.activeLaw ? consentType[consentData.activeLaw] : 'optin';
-    let event = new CustomEvent('wp_consent_type_defined');
-    document.dispatchEvent( event );
-    Object.entries(categories).forEach(([key, value]) => {
-        if (!(key in categoryMap))
-            return;
-        setConsentStatus(key, value ? 'allow' : 'deny');
-        
+        const config = banner && banner._Store && banner._Store._bannerConfig || {};
+        const law = typeof config.default_laws === 'string' ? config.default_laws.toLowerCase() : '';
+        const type = law === 'ccpa' ? 'optout' : law ? 'optin' : window.chilliConsentDefaultType === 'optout' ? 'optout' : 'optin';
+        const completed = Boolean(cookies.conzentConsent);
+        let preferences = [];
+        try { preferences = JSON.parse(cookies.conzentConsentPrefs || '[]'); } catch (error) {}
+        if (!Array.isArray(preferences)) preferences = [];
+        const categories = {};
+        ['necessary','analytics','marketing','functional','preferences','performance','unclassified'].forEach(function (category) {
+            categories[category] = category === 'necessary' || (completed ? preferences.includes(category) : type === 'optout');
+        });
+        return { activeLaw: law, consentType: type, categories, isUserActionCompleted: completed, consentID: cookies.conzent_id || '', languageCode: config.currentLang || '' };
+    };
+    window.chilliConsentSync = function () {
+        const data = window._getCnzConsent();
+        window.wp_consent_type = data.consentType;
+        if (typeof wp_set_consent === 'function') {
+            Object.entries(categoryMap).forEach(function (entry) {
+                const target = entry[0], sources = entry[1];
+                wp_set_consent(target, sources.some(source => data.categories[source]) ? 'allow' : 'deny');
+            });
+            // WP Consent API functional is necessary, not CMP performance.
+            wp_set_consent('functional', 'allow');
+            document.dispatchEvent(new CustomEvent('wp_consent_type_defined'));
+        }
+    };
+    document.addEventListener('conzentck_consent_update', window.chilliConsentSync);
+    document.addEventListener('conzentck_cookie_banner_load', window.chilliConsentSync);
+    window.addEventListener('load', function () {
+        window.chilliConsentSync();
+        const target = document.querySelector('#conzentId');
+        if (target) target.textContent = readCookies().conzent_id || 'Not found';
     });
-    function setConsentStatus(key, status) {
-        
-		if (typeof wp_set_consent === 'function'){
-			if (Array.isArray(categoryMap[key])) {
-				categoryMap[key].forEach(el => {
-					wp_set_consent(el, status);
-				});
-			} else {
-				wp_set_consent(categoryMap[key], status);
-			}
-		}
-		
-    }
-});
-
-window.addEventListener("load", function() {
-	var conzent_id = _accessConzentCookie('conzent_id');
-	if(document.querySelector("#conzentId")){
-		if(conzent_id){
-			document.querySelector("#conzentId").textContent = conzent_id;
-		}
-		else{
-			document.querySelector("#conzentId").textContent = "Not found";
-		}
-	}
-	
-});
+    // This runs in <head>, even if the banner or WP Consent API arrives later.
+    window.chilliConsentSync();
+})();

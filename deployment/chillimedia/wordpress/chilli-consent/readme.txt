@@ -4,7 +4,7 @@ Tags: cookie consent, cookie banner, consent management
 Requires at least: 5.8
 Tested up to: 7.1.2
 Requires PHP: 7.4
-Stable tag: 2.2.4.1
+Stable tag: 2.2.4.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,11 @@ The connector is not a replacement for testing a site's specific tracking config
 Chillimedia owns reviewing upstream changes, testing, packaging and distributing updates. Update URI and the renamed plugin folder/file prevent this fork from being replaced by the original WordPress.org package. No automatic update service is included in this build.
 
 == Changelog ==
+
+= 2.2.4.2 =
+* Initialize opt-in state in the head, replay saved choices and sync immediately after WordPress Consent API loads.
+* Respect explicit CCPA opt-out while keeping missing configuration fail closed.
+* Correct WP Consent API functional to necessary storage; deny optional categories before consent.
 
 = 2.2.4.1 =
 * Chilli Consent branding, fixed agency endpoint and independent update identity.

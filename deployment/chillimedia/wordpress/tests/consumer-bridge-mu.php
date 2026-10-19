@@ -37,11 +37,11 @@ add_action('wp_footer', static function () {
                 results.push({ name, pass, actual, expected });
             };
             apply([]);
-            snapshot('reject optional consent', { statistics: false, 'statistics-anonymous': false, marketing: false, preferences: false, functional: false });
+            snapshot('reject optional consent', { statistics: false, 'statistics-anonymous': false, marketing: false, preferences: false, functional: true });
             apply(['analytics', 'marketing']);
-            snapshot('allow analytics and marketing', { statistics: true, 'statistics-anonymous': true, marketing: true, preferences: false, functional: false });
+            snapshot('allow analytics and marketing', { statistics: true, 'statistics-anonymous': true, marketing: true, preferences: false, functional: true });
             apply([]);
-            snapshot('revoke optional consent', { statistics: false, 'statistics-anonymous': false, marketing: false, preferences: false, functional: false });
+            snapshot('revoke optional consent', { statistics: false, 'statistics-anonymous': false, marketing: false, preferences: false, functional: true });
             const pass = results.every(result => result.pass);
             output.dataset.status = pass ? 'passed' : 'failed';
             output.textContent = JSON.stringify({ status: output.dataset.status, consentType: window.wp_consent_type, results }, null, 2);

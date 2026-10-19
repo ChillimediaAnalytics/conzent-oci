@@ -6,6 +6,20 @@ hashes. Original GPLv3-or-later notices are kept in the plugin's LICENSE and
 NOTICE. Do not treat the main application's Apache licence as this plugin's
 licence.
 
+## Current release: 2.2.4.2
+
+The installation ZIP is ready. Validation passed 33 PHP assertions, 11 JavaScript
+bridge tests and PHP lint, plus real WordPress 7.1.3 with WP Consent API 2.1.0.
+Browser checks covered initial denial, reject, accept, returning visitors,
+reopening preferences, withdrawal and the real API consumer bridge. The local
+analytics-cookie fixture was blocked before consent, allowed after acceptance
+and removed within about one second of withdrawal. These checks used a disposable
+site; customer-specific tracking still follows the rollout checks below.
+
+The temporary WordPress container, volume, isolated database/user and scratch
+credentials/logs were removed after testing. Sanitized verification and cleanup
+reports remain under `tests/evidence/`.
+
 ## Installation
 
 Install `chilli-consent.zip` through WordPress **Plugins → Add New → Upload
@@ -31,11 +45,20 @@ subsequent navigation and the customer's own cache/optimization plugins.
 
 ## Integrations and limits
 
-- Keeps WordPress Consent API registration and the upstream category map:
-  functional→preferences, analytics→statistics/statistics-anonymous,
-  performance→functional and marketing→marketing.
-- Detects Google Site Kit with WP Consent API and retains its initial-state
-  handling; consent events read current banner state even when loaded later.
+- Establishes opt-in defaults and a synchronous bridge in the head before the
+  remote banner. Immediately synchronizes after WordPress Consent API loads,
+  restores saved choices without waiting for a user event, and responds to late
+  banner initialization. PHP API consumers receive the same fail-closed policy.
+- Maps optional analytics to statistics/statistics-anonymous, marketing to
+  marketing, and optional functional/preferences to preferences. WP Consent API
+  functional means necessary storage and remains allowed.
+- Explicit CCPA/opt-out configuration is respected; missing/unknown laws default
+  to opt-in. A saved accept/reject decision takes priority over opt-out defaults.
+  Browser state uses the loaded banner law. PHP consumers default to opt-in;
+  sites requiring server-side opt-out must explicitly provide `optout` through
+  the WordPress `wp_get_consent_type` filter. No policy network call is made on
+  each server render.
+- Retains compatibility with Google Site Kit consuming WordPress Consent API.
 - Loads `/c/consent.js` at `wp_head` priority 0. Common cache delay/defer exclusion
   attributes are retained. A theme/plugin can still print tags before that hook;
   inspect the real customer page rather than assuming all tags are covered.

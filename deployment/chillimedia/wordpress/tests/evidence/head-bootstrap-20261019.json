@@ -1,0 +1,20 @@
+{
+  "timestamp_utc": "2026-10-19T16:12:28.824159+00:00",
+  "connector_version": "2.2.4.2",
+  "visitor_http_status": 200,
+  "head_defaults_before_loader": true,
+  "head_bridge_before_loader": true,
+  "bridge_printed_once": true,
+  "after_api_sync_present": true,
+  "server_api_initial_state": {
+    "server_consent_type": "optin",
+    "statistics": false,
+    "anonymous": false,
+    "marketing": false,
+    "preferences": false,
+    "functional": true
+  },
+  "zip_sha256": "f9541dbf94c12f5471429543b2c4432ac1f7310eb6892b3c5f528c18d48e67fe",
+  "browser_recheck": "passed-root-actual-CUA-initial-optional-denial-accept-return-and-withdraw",
+  "actual_browser_evidence_owner": "root audit/evidence/chilli-wordpress-live-bridge.json and normal banner snapshots"
+}

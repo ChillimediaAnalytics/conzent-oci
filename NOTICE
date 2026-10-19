@@ -15,3 +15,9 @@ Trademarks and IAB Europe CMP ID:
 The Apache 2.0 license does not grant rights to the "Conzent" name, logos, or other
 trademarks, nor to Conzent's IAB Europe Consent Management Platform (CMP) ID. To run
 a TCF-certified setup, register your own CMP ID directly with IAB Europe.
+
+Chillimedia fork modifications (2026):
+Security and dependency repairs; fresh-install schema compatibility; agency
+deployment configuration; Chilli Consent branding; locally hosted dashboard
+assets; and a separately licensed WordPress connector fork. Original upstream
+notices and licences are retained. See deployment/chillimedia/README.md.

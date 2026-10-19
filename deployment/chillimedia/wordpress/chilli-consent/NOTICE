@@ -1,4 +1,4 @@
-Chilli Consent WordPress connector 2.2.4.1
+Chilli Consent WordPress connector 2.2.4.2
 
 Based on GetConzent CMP — Cookie Banner & Consent Management 2.2.4,
 published by Conzent ApS on WordPress.org.
@@ -18,6 +18,8 @@ Modified by Chillimedia on 2026-10-19:
 - Added independent Update URI; Chillimedia distributes future updates.
 - Safe remote API calls, disabled redirects for verification, explicit
   overview capability check and safe external-link attributes.
+- Version 2.2.4.2: head bootstrap, API-load ordering, immediate/saved/late-banner
+  synchronization, PHP fail-closed defaults and necessary functional semantics.
 - Separate actual verification status from the legacy loader-enabled flag;
   retain manually entered keys with an explicit pending status when offline.
 - Read asynchronous banner state at event time; exact cookie-name matching,

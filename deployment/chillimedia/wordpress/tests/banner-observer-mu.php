@@ -21,14 +21,17 @@ add_action('wp_footer', static function () {
                 try { cookies[name] = decodeURIComponent(raw); } catch (error) { cookies[name] = raw; }
             });
             const api = Object.fromEntries(categories.map(category => [category, typeof wp_has_consent === 'function' ? wp_has_consent(category) : 'API not loaded']));
-            const observation = { source: 'Real banner and WP Consent API state; local cookie fixture only', attempts, consentType: window.wp_consent_type || null, cookies, wpConsent: api };
+            const banner = window.conzent && window.conzent._Store && window.conzent._Store._bannerConfig || {};
+            let analyticsGranted = null;
+            try { if (typeof window._cnzCategoryGranted === 'function') analyticsGranted = window._cnzCategoryGranted('analytics'); } catch (error) { analyticsGranted = 'diagnostic error'; }
+            const observation = { source: 'Real banner and WP Consent API state; local cookie fixture only', attempts, fixtureCookieMaxAgeSeconds: 3600, consentType: window.wp_consent_type || null, cookies, wpConsent: api, runtime: { analyticsGranted, allowedCategories: Array.isArray(banner.allowed_categories) ? banner.allowed_categories : null, autoGranted: typeof banner._autoGranted === 'boolean' ? banner._autoGranted : null, defaultLaw: banner.default_laws || null } };
             window.__chilliQaObservation = observation;
             target.textContent = JSON.stringify(observation, null, 2);
         };
         const attempt = function () {
             attempts++;
             // No tracker/network: this only exercises the real cookie interceptor.
-            document.cookie = '_ga_chilli_qa=fixture; path=/; SameSite=Lax; Max-Age=60';
+            document.cookie = '_ga_chilli_qa=fixture; path=/; SameSite=Lax; Max-Age=3600';
             report();
         };
         window.addEventListener('load', function () { attempt(); setTimeout(report, 500); setInterval(attempt, 1000); });

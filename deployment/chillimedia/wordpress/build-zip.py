@@ -14,5 +14,5 @@ with zipfile.ZipFile(root/'chilli-consent.zip','w',compression=zipfile.ZIP_DEFLA
         output.writestr(info,data)
         manifest[name]=hashlib.sha256(data).hexdigest()
 zip_hash=hashlib.sha256((root/'chilli-consent.zip').read_bytes()).hexdigest()
-(root/'package-manifest.json').write_text(json.dumps({'version':'2.2.4.1','zip_sha256':zip_hash,'files':manifest},indent=2)+'\n')
+(root/'package-manifest.json').write_text(json.dumps({'version':'2.2.4.2','zip_sha256':zip_hash,'files':manifest},indent=2)+'\n')
 print('chilli-consent.zip SHA-256:',zip_hash)

@@ -1,16 +1,16 @@
 {
-  "version": "2.2.4.1",
-  "zip_sha256": "b2641fe1839a15d68face948ed762351f48c71c61d7078c63566de07b1daad13",
+  "version": "2.2.4.2",
+  "zip_sha256": "f9541dbf94c12f5471429543b2c4432ac1f7310eb6892b3c5f528c18d48e67fe",
   "files": {
     "chilli-consent/LICENSE": "526cf879f8d8ca84f2beaa0577003a9c4c1aaa4b592d7ce1b924f6cd2f9d51de",
-    "chilli-consent/NOTICE": "36e44cb754b4709937e2c6c4226bf3d7e685e4ed50dd23ba95f2a35e1add9499",
+    "chilli-consent/NOTICE": "a03505e31a9c2741fc0c574108296ace58d6a357183f4aeb111dce981994714b",
     "chilli-consent/assets/css/conzent-banner-admin.css": "49536d16c0ef648c8e6f320c1f75cec6a4df8a93ab9beb38f7a98432423c3241",
     "chilli-consent/assets/css/conzent-banner.css": "ae7446b065ff2ac451633a4840b0fb4c7e8c1f0974cc751132bf566df9e8e102",
-    "chilli-consent/assets/js/conzent-banner.js": "36d39aaebabf80595f4258e7da3356901e2bef88243f307f2d999f2aadce4196",
-    "chilli-consent/chilli-consent.php": "3f1d3a4708a99f24d14e6c82daff0db612f456b03303aea27e66a177b5c3cf1e",
+    "chilli-consent/assets/js/conzent-banner.js": "b039ae30a34a2c5f81b9be305067a71731688027762e47018a0e3dc03c4d0a32",
+    "chilli-consent/chilli-consent.php": "2075b54035481f107f84cad3e06adef5e62423e0377d9b0e4d86cebbfa51c078",
     "chilli-consent/includes/request-guard.php": "6a158c90e9d9f9fa7b0b1abcc8b120a3d1e6a91df8fd9505e7a4294e36cf4fd2",
     "chilli-consent/languages/getconzent-cmp-cookie-banner-consent-management.pot": "cb61208b4bde13455be1bdc0bc438b1d4ffdff264d6330eb28d7c90c9dc5bfbf",
-    "chilli-consent/readme.txt": "3e68a37e252cb59c12dc15e853ee36b3e569814054c867c280b96c62969ade08",
+    "chilli-consent/readme.txt": "a385c1a3bb28c89819336b09ee9c46864fec596422f1b2443b38d044cb406dc6",
     "chilli-consent/uninstall.php": "8c67efe6705fd9f834fbd80598ec8e77d2001976d29b16c7650523e8ac4d2708"
   }
 }

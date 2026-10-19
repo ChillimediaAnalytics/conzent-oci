@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-19T15:59:07.306621+00:00",
+  "timestamp_utc": "2026-10-19T16:17:31.017501+00:00",
   "image_id": "sha256:36243da432a0f0a3b56dc3240ecee9b159108d71305e7c064d987a20a465bfde",
   "container_image_ref": "sha256:36243da432a0f0a3b56dc3240ecee9b159108d71305e7c064d987a20a465bfde",
   "nonroot_uid": "www-data",
@@ -25,7 +25,7 @@
     {
       "name": "chilli-consent",
       "status": "active",
-      "version": "2.2.4.1"
+      "version": "2.2.4.2"
     },
     {
       "name": "hello",
@@ -54,6 +54,57 @@
   "real_banner_observation_fixture_present": true,
   "synthetic_test_not_on_default_page": true,
   "public_url": "https://consent.chillimedia.se/__wordpress_qa/",
-  "live_api_verification": "pending-public-host-cutover",
-  "customer_websites_modified": false
+  "live_api_verification": "passed-real-wordpress-settings-over-public-https",
+  "customer_websites_modified": false,
+  "strict_live_api_verified": true,
+  "connector_version": "2.2.4.2",
+  "fixture_status": "removed-after-real-browser-tests",
+  "cleanup": {
+    "timestamp_utc": "2026-10-19T16:19:05.247786+00:00",
+    "scratch_container_removed": true,
+    "scratch_volume_removed": true,
+    "scratch_schema_removed": true,
+    "scratch_database_user_removed": true,
+    "scratch_password_files_and_private_logs_removed": true,
+    "sanitized_evidence_preserved": true,
+    "conzent_database_and_test_site_preserved": true,
+    "production_services": [
+      {
+        "name": "chilli-conzent-nginx-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chilli-conzent-app-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chilli-conzent-mariadb-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chilli-conzent-redis-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chilli-conzent-scanner-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chillimedia-blikk-app-1",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "chillimedia-blikk-mongo-1",
+        "running": true,
+        "health": "not-configured"
+      }
+    ],
+    "host_qa_route_cleanup_owner": "root agent"
+  }
 }

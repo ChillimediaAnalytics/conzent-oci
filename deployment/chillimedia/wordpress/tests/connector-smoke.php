@@ -8,6 +8,10 @@ $GLOBALS['calls'] = [];
 $GLOBALS['can_manage'] = true;
 $GLOBALS['remote_get_mode'] = 'success';
 class FixtureHTTPError {}
+class WP_CONSENT_API {}
+function wp_get_consent_type() { return getconzent_cmp_default_consent_type($GLOBALS['fixture_consent_type'] ?? ''); }
+function wp_enqueue_style(...$args) {}
+function wp_add_inline_script($handle,$data,$position) { $GLOBALS['inline_scripts'][$handle][$position][]=$data; }
 function add_action(...$args) {}
 function add_filter(...$args) {}
 function register_activation_hook(...$args) {}
@@ -15,7 +19,7 @@ function register_deactivation_hook(...$args) {}
 function plugin_dir_path($file) { return dirname($file) . '/'; }
 function plugin_dir_url($file) { return 'https://client.example/wp-content/plugins/chilli-consent/'; }
 function plugin_basename($file) { return 'chilli-consent/' . basename($file); }
-function get_plugin_data($file) { return ['Version' => '2.2.4.1']; }
+function get_plugin_data($file) { return ['Version' => '2.2.4.2']; }
 function get_option($key, $default = false) { return $GLOBALS['options'][$key] ?? $default; }
 function add_option($key, $value, ...$args) { if (array_key_exists($key,$GLOBALS['options'])) return false; $GLOBALS['options'][$key]=$value; return true; }
 function update_option($key, $value) { $GLOBALS['options'][$key]=$value; }
@@ -111,6 +115,19 @@ expect(get_option('chilli_consent_key_verified')==='pending','legacy configured 
 $GLOBALS['options']['conzent_verified']='yes'; $GLOBALS['options']['conzent_website_key']='fixture-key';
 ob_start(); getconzent_cmp_print_loader(); $loader=ob_get_clean();
 expect(strpos($loader,'src="https://consent.chillimedia.se/c/consent.js"')!==false,'visitor loader uses agency endpoint');
-expect(strpos($loader,'data-key="fixture-key"')!==false && strpos($loader,'data-plugin="wordpress/2.2.4.1"')!==false,'visitor loader carries site key and fork version');
+expect(strpos($loader,'data-key="fixture-key"')!==false && strpos($loader,'data-plugin="wordpress/2.2.4.2"')!==false,'visitor loader carries site key and fork version');
 expect(preg_match('/\s(?:async|defer)(?:\s|=|>)/',$loader)===0 && strpos($loader,'data-cfasync="false"')!==false,'loader remains parser-blocking and retains cache exclusion');
+expect(strpos($loader,'chilli-consent-defaults') < strpos($loader,'/c/consent.js'),'WP consent defaults print before the remote CMP loader');
+expect(strpos($loader,'assets/js/conzent-banner.js') < strpos($loader,'/c/consent.js'),'synchronous head bridge prints before remote loader and later consumers');
+getconzent_cmp_enqueue_frontend();
+expect(strpos($GLOBALS['inline_scripts']['wp-consent-api']['after'][0],'chilliConsentSync')!==false,'bridge sync runs immediately after real API script before dependents');
+expect(getconzent_cmp_default_consent_type('')==='optin','empty server consent type fails closed');
+expect(getconzent_cmp_default_consent_type('optout')==='optout','explicit server optout remains supported');
+$_COOKIE=[];
+expect(getconzent_cmp_php_consent(true,'statistics')===false && getconzent_cmp_php_consent(true,'marketing')===false,'server-side optional API consumers deny without a CMP decision');
+expect(getconzent_cmp_php_consent(false,'functional')===true,'WordPress functional remains necessary');
+$_COOKIE=['conzentConsent'=>'yes','conzentConsentPrefs'=>'["analytics"]'];
+expect(getconzent_cmp_php_consent(false,'statistics')===true && getconzent_cmp_php_consent(true,'marketing')===false,'server-side API consumers restore saved CMP categories');
+$_COOKIE=[];$GLOBALS['fixture_consent_type']='optout';
+expect(getconzent_cmp_php_consent(false,'marketing')===true,'explicit server optout applies when no decision exists');
 echo "Connector fixture checks passed.\n";
