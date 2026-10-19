@@ -40,7 +40,7 @@ final class ScriptCheckSecurityTest extends TestCase
         $fetcher->expects(self::never())->method('fetch');
 
         $response = $this->handler($sites, $fetcher)->handle(
-            (new ServerRequest('POST', '/app/preview/script-check'))->withParsedBody(['site_id' => 9]),
+            (new ServerRequest('POST', '/app/dashboard/script-check'))->withParsedBody(['site_id' => 9]),
         );
         self::assertSame(401, $response->getStatusCode());
     }
@@ -176,7 +176,7 @@ final class ScriptCheckSecurityTest extends TestCase
 
     private function request(int $siteId): ServerRequest
     {
-        return (new ServerRequest('POST', '/app/preview/script-check'))
+        return (new ServerRequest('POST', '/app/dashboard/script-check'))
             ->withAttribute('user', ['id' => 1, 'role' => 'customer'])->withParsedBody(['site_id' => $siteId]);
     }
 

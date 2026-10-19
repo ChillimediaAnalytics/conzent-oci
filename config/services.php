@@ -85,7 +85,7 @@ return [
         $twig->addGlobal('modules', $moduleRegistry);
         $twig->addGlobal('edition', $c->get(\OCI\Shared\Service\EditionService::class));
         $twig->addGlobal('openrouter_enabled', trim($_ENV['OPENROUTER_API_KEY'] ?? '') !== '');
-        $twig->addGlobal('chat_service_url', $_ENV['CHAT_SERVICE_URL'] ?? 'https://chat.getconzent.com');
+        $twig->addGlobal('chat_service_url', $_ENV['CHAT_SERVICE_URL'] ?? '');
         // CMP/TCF globals (cmp_id, cmp_name, cmp_valid, tcf_enabled) are set
         // by SessionMiddleware after server-side validation against the IAB registry.
 

@@ -8,7 +8,7 @@ Compose project `chilli-conzent` runs on the existing Oderland Cloud host. Its o
 
 The host proxy in `nginx-host.conf` preserves Let's Encrypt renewal and sets `X-Robots-Tag: noindex, nofollow` on every response. Login/dashboard also have robots meta tags. No main-site SEO configuration changes. Legacy `/admin/login` redirects to Conzent's `/login`.
 
-Public signup is disabled in the dedicated nginx configuration; this is operated by the agency. Email and third-party OAuth are not configured. Operators provision users through the dashboard/CLI. The SMTP-dependent password-reset link is omitted until mail delivery is configured.
+Public signup is disabled in the dedicated nginx configuration; this is operated by the agency. Email, third-party OAuth and external support chat are not configured. Operators provision users through the dashboard/CLI. The SMTP-dependent password-reset link is omitted until mail delivery is configured.
 
 ## Security changes in this fork
 

@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * POST /app/preview/script-check — Check if the consent script is installed on a site.
+ * POST /app/dashboard/script-check — Check if the consent script is installed on a site.
  *
  * Fetches the site's HTML server-side (to avoid CORS) and checks for
  * the presence of the Conzent/OCI consent script tag.

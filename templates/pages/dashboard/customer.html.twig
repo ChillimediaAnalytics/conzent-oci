@@ -5,9 +5,9 @@
 
 {% block head %}
 {# ApexCharts for consent donut + pageview area chart #}
-<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.52.0"></script>
+<script src="/assets/vendor/apexcharts-3.52.0/apexcharts.min.js"></script>
 {# Driver.js for onboarding tour #}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css">
+<link rel="stylesheet" href="/assets/vendor/driver-1.3.1/driver.css">
 <style>
     .compliance-gauge { width: 120px; height: 120px; position: relative; display: inline-block; }
     .compliance-gauge .gauge-bg { fill: none; stroke: #e8e8e8; stroke-width: 14; }
@@ -1677,7 +1677,7 @@ function easyConfig() {
 
 {# ── Onboarding Tour (Dashboard) ─────────────────────── #}
 {% if current_user is defined and current_user %}
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+<script src="/assets/vendor/driver-1.3.1/driver.js.iife.js"></script>
 <script>
 (function() {
     var autoStart = {{ (show_onboarding_tour and (dashboard.isSubscribed or dashboard.isEnterprise or monetization_model == 'oci')) ? 'true' : 'false' }};

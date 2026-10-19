@@ -41,7 +41,7 @@ final class Version20260910_001_LegacyImportTracking extends Migration
             ADD COLUMN IF NOT EXISTS `legacy_imported_at` DATETIME NULL DEFAULT NULL AFTER `legacy_id`');
 
         $this->sql('ALTER TABLE `oci_subscriptions`
-            ADD COLUMN IF NOT EXISTS `legacy_mirrored` TINYINT(1) NOT NULL DEFAULT 0 COMMENT \'1 = a copy of the customer\'\'s existing conzent.net Stripe subscription, written by the legacy importer\' AFTER `migration_free_months`');
+            ADD COLUMN IF NOT EXISTS `legacy_mirrored` TINYINT(1) NOT NULL DEFAULT 0 COMMENT \'1 = a copy of the customer\'\'s existing conzent.net Stripe subscription, written by the legacy importer\'');
 
         $this->sql("CREATE TABLE IF NOT EXISTS `oci_legacy_import_runs` (
             `id`                INT UNSIGNED NOT NULL AUTO_INCREMENT,

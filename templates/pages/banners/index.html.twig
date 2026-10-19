@@ -5,7 +5,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css">
+<link rel="stylesheet" href="/assets/vendor/driver-1.3.1/driver.css">
 {% endblock %}
 
 {% block content %}
@@ -1661,7 +1661,7 @@ function bannerSettings() {
 
 {# ── Onboarding Tour (Banner Settings) ───────────────── #}
 {% if current_user is defined and current_user and bannerSettings is not empty %}
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+<script src="/assets/vendor/driver-1.3.1/driver.js.iife.js"></script>
 <script>
 (function() {
     var autoStart = {{ show_onboarding_tour ? 'true' : 'false' }};

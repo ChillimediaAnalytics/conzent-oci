@@ -1,0 +1,358 @@
+{
+  "retrieved_at": "2026-10-19T15:56:21.976726+00:00",
+  "packages": [
+    {
+      "name": "bulma",
+      "version": "1.0.2",
+      "registry": "https://registry.npmjs.org/bulma/1.0.2",
+      "tarball": "https://registry.npmjs.org/bulma/-/bulma-1.0.2.tgz",
+      "integrity": "sha512-D7GnDuF6seb6HkcnRMM9E739QpEY9chDzzeFrHMyEns/EXyDJuQ0XA0KxbBl/B2NTsKSoDomW61jFGFaAxhK5A==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/jgthms/bulma.git",
+        "type": "git"
+      },
+      "gitHead": "3fd2f6502678c09dc39d2fe37980b88c2c5bc534"
+    },
+    {
+      "name": "@fortawesome/fontawesome-free",
+      "version": "6.5.1",
+      "registry": "https://registry.npmjs.org/%40fortawesome%2Ffontawesome-free/6.5.1",
+      "tarball": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz",
+      "integrity": "sha512-CNy5vSwN3fsUStPRLX7fUYojyuzoEMSXPl7zSLJ8TgtRfjv24LOnOWKT2zYwaHZCJGkdyRnTmstR0P+Ah503Gw==",
+      "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
+      "repository": {
+        "url": "git+https://github.com/FortAwesome/Font-Awesome.git",
+        "type": "git"
+      },
+      "gitHead": "e9c25eab88923ded1816f717d78e22873f406163"
+    },
+    {
+      "name": "alpinejs",
+      "version": "3.17.4",
+      "registry": "https://registry.npmjs.org/alpinejs/3.17.4",
+      "tarball": "https://registry.npmjs.org/alpinejs/-/alpinejs-3.17.4.tgz",
+      "integrity": "sha512-N2gsr+58XVUt7OAPKnUGiKPDtkd+xbSGTae8C8IJxeRdkkhBJPIautkJ+qcwb7lcjJ/QK3/CPVIbN20JPvtK7A==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/alpinejs/alpine.git",
+        "type": "git",
+        "directory": "packages/alpinejs"
+      },
+      "gitHead": "20ee0e923b3f34e6d6467a31d1b97dd43c85a41d"
+    },
+    {
+      "name": "htmx.org",
+      "version": "2.0.4",
+      "registry": "https://registry.npmjs.org/htmx.org/2.0.4",
+      "tarball": "https://registry.npmjs.org/htmx.org/-/htmx.org-2.0.4.tgz",
+      "integrity": "sha512-HLxMCdfXDOJirs3vBZl/ZLoY+c7PfM4Ahr2Ad4YXh6d22T5ltbTXFFkpx9Tgb2vvmWFMbIc3LqN2ToNkZJvyYQ==",
+      "license": "0BSD",
+      "repository": {
+        "url": "git+https://github.com/bigskysoftware/htmx.git",
+        "type": "git"
+      },
+      "gitHead": "b82cf843e47e575dd8c2ad8fee547d8e2c3bb87f"
+    },
+    {
+      "name": "marked",
+      "version": "18.1.1",
+      "registry": "https://registry.npmjs.org/marked/18.1.1",
+      "tarball": "https://registry.npmjs.org/marked/-/marked-18.1.1.tgz",
+      "integrity": "sha512-zEGgrtUG8crk+TrMacJSVABU4DYDDkS8uqgU3ohrn/2fW9C2AEfUrO3m6IhpIpQpl7YcVpiXXC9cSMWDANT3dg==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/markedjs/marked.git",
+        "type": "git"
+      },
+      "gitHead": "cdbdc0122ab83b2b97560944bf009a22cfb78b05"
+    },
+    {
+      "name": "Inter",
+      "source": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "license": "OFL-1.1",
+      "font_files": 7
+    },
+    {
+      "name": "apexcharts",
+      "version": "3.52.0",
+      "registry": "https://registry.npmjs.org/apexcharts/3.52.0",
+      "tarball": "https://registry.npmjs.org/apexcharts/-/apexcharts-3.52.0.tgz",
+      "integrity": "sha512-7dg0ADKs8AA89iYMZMe2sFDG0XK5PfqllKV9N+i3hKHm3vEtdhwz8AlXGm+/b0nJ6jKiaXsqci5LfVxNhtB+dA==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/apexcharts/apexcharts.js.git",
+        "type": "git"
+      },
+      "gitHead": "83c543e588bf0b39b7de7e5f3fb301d821b24ff9"
+    },
+    {
+      "name": "driver.js",
+      "version": "1.3.1",
+      "registry": "https://registry.npmjs.org/driver.js/1.3.1",
+      "tarball": "https://registry.npmjs.org/driver.js/-/driver.js-1.3.1.tgz",
+      "integrity": "sha512-MvUdXbqSgEsgS/H9KyWb5Rxy0aE6BhOVT4cssi2x2XjmXea6qQfgdx32XKVLLSqTaIw7q/uxU5Xl3NV7+cN6FQ==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/kamranahmedse/driver.js.git",
+        "type": "git"
+      },
+      "gitHead": "e65eaf383eaa63f492658c367534fd22cce891e9"
+    },
+    {
+      "name": "codemirror",
+      "version": "5.65.18",
+      "registry": "https://registry.npmjs.org/codemirror/5.65.18",
+      "tarball": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz",
+      "integrity": "sha512-Gaz4gHnkbHMGgahNt3CA5HBk5lLQBqmD/pBgeB4kQU6OedZmqMBjlRF0LSrp2tJ4wlLNPm2FfaUd1pDy0mdlpA==",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/codemirror/CodeMirror.git",
+        "type": "git"
+      },
+      "gitHead": "998f328b6b01217f6ef9e958ce3a128daddc592e"
+    }
+  ],
+  "files": [
+    {
+      "path": "bulma-1.0.2/bulma.min.css",
+      "source": "https://registry.npmjs.org/bulma/-/bulma-1.0.2.tgz#package/css/bulma.min.css",
+      "sha256": "79faf1c934ef289d90d7f043f29f5d645b5311c8a5f9c333c5978bffb85d3b68",
+      "bytes": 677242
+    },
+    {
+      "path": "bulma-1.0.2/LICENSE",
+      "source": "https://registry.npmjs.org/bulma/-/bulma-1.0.2.tgz#package/LICENSE",
+      "sha256": "fbe7d8ec18b72eded15d79ca73da5eef9e8e258f5f1aff83e4e993e69752279c",
+      "bytes": 1080
+    },
+    {
+      "path": "fontawesome-6.5.1/css/all.min.css",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/css/all.min.css",
+      "sha256": "c22cfb6520a7fdbb738632834019acf47c78b1279462c0eb4cb83bae83ecb5a7",
+      "bytes": 102641
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-brands-400.ttf",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-brands-400.ttf",
+      "sha256": "5656d596bc597165a42182f67b2b9f17d2ae47a9e3ef1b042b9a729739730705",
+      "bytes": 207972
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-regular-400.ttf",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-regular-400.ttf",
+      "sha256": "5d02dc9b858e3c85a794f87e379857f4fedc4e26cf15001714a9a0e0b1d2294d",
+      "bytes": 68004
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-solid-900.ttf",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-solid-900.ttf",
+      "sha256": "fbbf06d7437aa30f3cd44c968380193545a8fc3eadfb7ad897bbb101eefec5a2",
+      "bytes": 419720
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-v4compatibility.ttf",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-v4compatibility.ttf",
+      "sha256": "09663a36fc05e7190af8324b855105c5bb511ad94f94b81b34afee503279eca2",
+      "bytes": 10832
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-brands-400.woff2",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-brands-400.woff2",
+      "sha256": "3a8924cd5203a28628716aedb5cef0943da4c3b44e3ffcee90ab06387b41c490",
+      "bytes": 117372
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-regular-400.woff2",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-regular-400.woff2",
+      "sha256": "2bccecf0bc7e96cd5ce4003abeb3ae9ee4a3d19158c4e6edfd2df32d2f0d5721",
+      "bytes": 25452
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-solid-900.woff2",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-solid-900.woff2",
+      "sha256": "9fc85f3a4544ab0d570c7f8f9bbb88db8d92c359b2707580ea8b07c75673eae2",
+      "bytes": 156496
+    },
+    {
+      "path": "fontawesome-6.5.1/webfonts/fa-v4compatibility.woff2",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/webfonts/fa-v4compatibility.woff2",
+      "sha256": "4d4a2d7fd1c6684845cb174fdd7fc073bd64cb741286fb247f8b76c2b7b852c4",
+      "bytes": 4792
+    },
+    {
+      "path": "fontawesome-6.5.1/LICENSE.txt",
+      "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.1.tgz#package/LICENSE.txt",
+      "sha256": "0aa8f86525273b2efa4f40f4272a188e187704252170e979dc06879adf68d43c",
+      "bytes": 7427
+    },
+    {
+      "path": "alpinejs-3.17.4/cdn.min.js",
+      "source": "https://registry.npmjs.org/alpinejs/-/alpinejs-3.17.4.tgz#package/dist/cdn.min.js",
+      "sha256": "232519394c6c8fdba6f362b1d9da16106db513cdbf899011f00daab4051df31c",
+      "bytes": 55891
+    },
+    {
+      "path": "alpinejs-3.17.4/LICENSE",
+      "source": "https://raw.githubusercontent.com/alpinejs/alpine/20ee0e923b3f34e6d6467a31d1b97dd43c85a41d/LICENSE.md",
+      "sha256": "08b7502da6e7aa1d0bbdc97d220fbf669b9366c61bd0f072238283c89bc4773a",
+      "bytes": 1092
+    },
+    {
+      "path": "htmx-2.0.4/htmx.min.js",
+      "source": "https://registry.npmjs.org/htmx.org/-/htmx.org-2.0.4.tgz#package/dist/htmx.min.js",
+      "sha256": "e209dda5c8235479f3166defc7750e1dbcd5a5c1808b7792fc2e6733768fb447",
+      "bytes": 50917
+    },
+    {
+      "path": "htmx-2.0.4/LICENSE",
+      "source": "https://registry.npmjs.org/htmx.org/-/htmx.org-2.0.4.tgz#package/LICENSE",
+      "sha256": "d3d2456f76414f2456104660ebd65aff1c04cd7966b942bdabd63f3cdb316a38",
+      "bytes": 642
+    },
+    {
+      "path": "marked-18.1.1/marked.umd.js",
+      "source": "https://registry.npmjs.org/marked/-/marked-18.1.1.tgz#package/lib/marked.umd.js",
+      "sha256": "b82b9334406d8bdd16b6236c08de1cb65b2a859873ca9503d9cc0b292ca3c12a",
+      "bytes": 47956
+    },
+    {
+      "path": "marked-18.1.1/LICENSE",
+      "source": "https://registry.npmjs.org/marked/-/marked-18.1.1.tgz#package/LICENSE",
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c",
+      "bytes": 2942
+    },
+    {
+      "path": "inter/inter-0.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2",
+      "sha256": "71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075",
+      "bytes": 18748
+    },
+    {
+      "path": "inter/inter-1.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+      "bytes": 48256
+    },
+    {
+      "path": "inter/inter-2.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7SUc.woff2",
+      "sha256": "1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6",
+      "bytes": 18996
+    },
+    {
+      "path": "inter/inter-3.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7SUc.woff2",
+      "sha256": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
+      "bytes": 85068
+    },
+    {
+      "path": "inter/inter-4.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2",
+      "sha256": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+      "bytes": 25960
+    },
+    {
+      "path": "inter/inter-5.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7SUc.woff2",
+      "sha256": "6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190",
+      "bytes": 11232
+    },
+    {
+      "path": "inter/inter-6.woff2",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7SUc.woff2",
+      "sha256": "5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2",
+      "bytes": 10252
+    },
+    {
+      "path": "inter/inter.css",
+      "source": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "sha256": "aefb3057498ecfec2b5ee83e697cad422ea02daccb9b138f66e6f22c5d6d5513",
+      "bytes": 7936
+    },
+    {
+      "path": "inter/OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "bytes": 4377
+    },
+    {
+      "path": "apexcharts-3.52.0/apexcharts.min.js",
+      "source": "https://registry.npmjs.org/apexcharts/-/apexcharts-3.52.0.tgz#package/dist/apexcharts.min.js",
+      "sha256": "dacc69f7eb21440e4b331ce1831f9fa5e40f218d995a005db789a9e55d989fe1",
+      "bytes": 534248
+    },
+    {
+      "path": "apexcharts-3.52.0/LICENSE",
+      "source": "https://registry.npmjs.org/apexcharts/-/apexcharts-3.52.0.tgz#package/LICENSE",
+      "sha256": "4db98d106f5a157d60b24d49a4852156542ef58e08f1034e8a3b6d63e53e2241",
+      "bytes": 1076
+    },
+    {
+      "path": "driver-1.3.1/driver.css",
+      "source": "https://registry.npmjs.org/driver.js/-/driver.js-1.3.1.tgz#package/dist/driver.css",
+      "sha256": "4b398481a7ce8375af4d9f58f39410c73a0b70726fe513686d3d51c10ad76cb5",
+      "bytes": 3938
+    },
+    {
+      "path": "driver-1.3.1/driver.js.iife.js",
+      "source": "https://registry.npmjs.org/driver.js/-/driver.js-1.3.1.tgz#package/dist/driver.js.iife.js",
+      "sha256": "3e3790dea8118c80a7a1d81af9454f8f6fe9a5dd180e843ce8ba638c5b446753",
+      "bytes": 20322
+    },
+    {
+      "path": "driver-1.3.1/license",
+      "source": "https://registry.npmjs.org/driver.js/-/driver.js-1.3.1.tgz#package/license",
+      "sha256": "ec3ce3a08736fefd6a03a6d5b52b0705e6919fe06de9d7bd3fb63dcfb492d76d",
+      "bytes": 1067
+    },
+    {
+      "path": "codemirror-5.65.18/codemirror.js",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/lib/codemirror.js",
+      "sha256": "edc03cf5294adb8f68eed55f8845888aa0c403a6445b15f80a8666a1f540d78b",
+      "bytes": 402008
+    },
+    {
+      "path": "codemirror-5.65.18/codemirror.css",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/lib/codemirror.css",
+      "sha256": "eb494ea972d2661ef86f7f6ac656dd6786d721e49c9c1b46e1eb967e4b6f9bf3",
+      "bytes": 8720
+    },
+    {
+      "path": "codemirror-5.65.18/theme/monokai.css",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/theme/monokai.css",
+      "sha256": "2463dc6fd92019a0c7ca2aaa01d03116b280fa7c6ae01bf21df7c107d9b683e8",
+      "bytes": 2179
+    },
+    {
+      "path": "codemirror-5.65.18/mode/xml/xml.js",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/mode/xml/xml.js",
+      "sha256": "dc7e44d410399326f802e2924573cbf6f942a79f647fd0b97f0b607973bc9a09",
+      "bytes": 13353
+    },
+    {
+      "path": "codemirror-5.65.18/mode/javascript/javascript.js",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/mode/javascript/javascript.js",
+      "sha256": "1311c73c66308ba6f78512b4c2e770a6900c80c3629683763329668ee6111163",
+      "bytes": 38894
+    },
+    {
+      "path": "codemirror-5.65.18/mode/css/css.js",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/mode/css/css.js",
+      "sha256": "60f0689e5c6af7f36c341e8e1341a4f10b4f0a04cebfb7341bcbedba9b572b32",
+      "bytes": 40492
+    },
+    {
+      "path": "codemirror-5.65.18/mode/htmlmixed/htmlmixed.js",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/mode/htmlmixed/htmlmixed.js",
+      "sha256": "fe5912e1d10f8fecb98bd31e2f957c0bbc9abf6b505d11b6dbcd27542d0fdcad",
+      "bytes": 5688
+    },
+    {
+      "path": "codemirror-5.65.18/LICENSE",
+      "source": "https://registry.npmjs.org/codemirror/-/codemirror-5.65.18.tgz#package/LICENSE",
+      "sha256": "168a4becc968f5001e2ee2e0291b6e4daabafc1894a11ade1e11d56e96096e07",
+      "bytes": 1113
+    }
+  ]
+}
