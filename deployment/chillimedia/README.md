@@ -33,7 +33,7 @@ These are targeted repairs with regression tests, not an exhaustive security cer
 7. First install only: create the operator with `php bin/oci setup`. Prefer passing credentials inside a protected process environment rather than shell history/command arguments.
 8. `docker compose exec -T app php bin/oci scanner:register`
 9. `RELEASE=<commit> docker compose up -d --wait`
-10. Twig caches are separated by the `RELEASE` value. Change it for every image update; reload nginx when its mounted configuration changes.
+10. Twig caches are separated by the `RELEASE` value. Change it for every image update; recreate nginx after mounted configuration changes (`docker compose up -d --no-deps --force-recreate --wait nginx`). Its FastCGI resolver follows app-container address changes.
 11. Verify login, site creation, generated banner, consent save, WordPress rendering, scanning, ownership and noindex before switching the dedicated host proxy.
 
 `RELEASE` is retained in the protected environment file. Deployment is manual, not automatic on GitHub push. Record built image digests with the release.
