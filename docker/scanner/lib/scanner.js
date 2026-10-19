@@ -10,6 +10,8 @@
  */
 
 const puppeteer = require('puppeteer-core');
+const { createNetworkPolicy, parseWebUrl } = require('./network-policy');
+const { createEgressProxy } = require('./egress-proxy');
 const {
   PRE_CONSENT,
   POST_CONSENT,
@@ -80,18 +82,34 @@ class CookieScanner {
     this.maxConcurrent = options.maxConcurrent || 3;
     this.timeout = options.timeout || 60000;
     this.browser = null;
+    this.networkPolicy = options.networkPolicy || createNetworkPolicy();
+    this.egressProxy = null;
+    this._initializing = null;
     this.activeCount = 0;
     this._queue = [];
     this._processing = false;
   }
 
   async initialize() {
+    if (this.browser?.connected) return;
+    if (this._initializing) return this._initializing;
+    this._initializing = this._launchBrowser();
+    try { return await this._initializing; } finally { this._initializing = null; }
+  }
+
+  async _launchBrowser() {
     const chromiumPath = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROMIUM_PATH || '/usr/bin/chromium';
 
+    if (!this.egressProxy) this.egressProxy = await createEgressProxy(this.networkPolicy);
     this.browser = await puppeteer.launch({
       executablePath: chromiumPath,
       headless: 'new',
       args: [
+        `--proxy-server=${this.egressProxy.url}`,
+        '--proxy-bypass-list=<-loopback>',
+        '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1',
+        '--disable-quic',
+        '--force-webrtc-ip-handling-policy=disable_non_proxied_udp',
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
@@ -120,6 +138,10 @@ class CookieScanner {
       await this.browser.close();
       this.browser = null;
     }
+    if (this.egressProxy) {
+      await this.egressProxy.close();
+      this.egressProxy = null;
+    }
   }
 
   /**
@@ -137,6 +159,9 @@ class CookieScanner {
    * @returns {Promise<ScanResult>}
    */
   async scanUrl(url, options = {}) {
+    // Check before opening a browser or queueing work. The egress proxy checks
+    // each actual connection again and pins its address.
+    await this.networkPolicy.resolve(url);
     // Throttle concurrent scans
     if (this.activeCount >= this.maxConcurrent) {
       await new Promise(resolve => this._queue.push(resolve));
@@ -159,7 +184,7 @@ class CookieScanner {
 
   async _doScan(url, options) {
     const waitForNetworkIdle = options.waitForNetworkIdle !== false;
-    const extraWait = options.extraWait || 3000;
+    const extraWait = Number.isFinite(options.extraWait) ? Math.min(Math.max(options.extraWait, 0), 10000) : 3000;
     const startTime = Date.now();
 
     // With no phases and no block list requested, everything below behaves
@@ -171,7 +196,7 @@ class CookieScanner {
     const shielded = twoPhase || blockUrls.length > 0;
     const shouldBlock = buildBlockMatcher(blockUrls, { failClosed: twoPhase });
 
-    if (!this.browser || !this.browser.isConnected()) {
+    if (!this.browser || !this.browser.connected) {
       await this.close();
       await this.initialize();
     }
@@ -204,14 +229,24 @@ class CookieScanner {
 
       // A site's service worker carries fetches past page-level interception,
       // which would let the runtime's consent and pageview calls through.
-      if (shielded) {
-        await page.setBypassServiceWorker(true);
-      }
+      await page.setBypassServiceWorker(true);
 
       // Enable request interception to track third-party requests
       await page.setRequestInterception(true);
-      page.on('request', (request) => {
+      page.on('request', async (request) => {
         const reqUrl = request.url();
+        // Reject unsupported network schemes even if a page tries to navigate
+        // frames/popups to them. Data/blob resources have no network destination.
+        if (!/^(https?:|data:|blob:|about:blank$)/i.test(reqUrl)) {
+          await request.abort('blockedbyclient').catch(() => {});
+          return;
+        }
+        if (/^https?:/i.test(reqUrl)) {
+          try { parseWebUrl(reqUrl); } catch {
+            await request.abort('blockedbyclient').catch(() => {});
+            return;
+          }
+        }
 
         // Answer the app's own write endpoints ourselves. Never abort: the
         // runtime keeps an aborted call in localStorage and replays it with
@@ -240,7 +275,7 @@ class CookieScanner {
             });
           }
         } catch { /* invalid URL, skip */ }
-        request.continue();
+        await request.continue().catch(() => {});
       });
 
       // The consent-timing probe needs to know when defaults appeared, also

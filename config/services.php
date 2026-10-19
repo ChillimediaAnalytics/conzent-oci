@@ -32,6 +32,8 @@ return [
     // ── Configuration values ────────────────────────────────
     'config.base_url' => $_ENV['APP_URL'] ?? 'http://localhost:8100',
     'config.monetization_model' => $_ENV['MONETIZATION_MODEL'] ?? 'saas',
+    OCI\Http\Middleware\SameOriginMiddleware::class => static fn (ContainerInterface $c): OCI\Http\Middleware\SameOriginMiddleware
+        => new OCI\Http\Middleware\SameOriginMiddleware($c->get('config.base_url')),
 
     // ── Database (Doctrine DBAL) ────────────────────────────
     Connection::class => static function (ContainerInterface $c): Connection {
@@ -294,6 +296,17 @@ return [
     // challenge fetcher is an interface so tests hand in a fake.
     OCI\Infrastructure\Http\UrlGuard::class => autowire(OCI\Infrastructure\Http\UrlGuard::class),
     OCI\Infrastructure\Http\ChallengeFetcherInterface::class => autowire(OCI\Infrastructure\Http\CurlChallengeFetcher::class),
+    // Homepage checks need more than a claim token's 4 KB response. Keep the
+    // transport's pinned DNS/TLS/no-redirect protections and a bounded 256 KiB page.
+    OCI\Dashboard\Controller\ScriptCheckHandler::class => static function (ContainerInterface $c): OCI\Dashboard\Controller\ScriptCheckHandler {
+        $logger = $c->get(LoggerInterface::class);
+        return new OCI\Dashboard\Controller\ScriptCheckHandler(
+            $c->get(OCI\Site\Repository\SiteRepositoryInterface::class),
+            $logger,
+            $c->get(OCI\Infrastructure\Http\UrlGuard::class),
+            new OCI\Infrastructure\Http\CurlChallengeFetcher($logger, OCI\Dashboard\Controller\ScriptCheckHandler::MAX_BODY_BYTES),
+        );
+    },
     OCI\Site\Service\SiteClaimService::class => static function (ContainerInterface $c): OCI\Site\Service\SiteClaimService {
         return new OCI\Site\Service\SiteClaimService(
             $c->get(OCI\Site\Repository\SiteRepositoryInterface::class),

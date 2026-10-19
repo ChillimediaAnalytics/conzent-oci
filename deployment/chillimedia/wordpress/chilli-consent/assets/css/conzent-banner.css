@@ -1,0 +1,4 @@
+.gc-tracking-box{float:left;width:100%;margin:10px auto;}
+.gc-label{font-weight:bold;margin-right:10px;}
+.gc-val{border:2px dashed #ccc;padding:5px;}
+.tracking-inner{display:flex;align-items: center;padding:10px;}

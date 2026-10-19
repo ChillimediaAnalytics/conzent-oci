@@ -14,9 +14,10 @@ use Psr\Http\Message\ServerRequestInterface;
  * POST /api/v1/scan-webhook — Receive scan results from scanner servers.
  *
  * Called by the scanner Docker container when a batch scan completes.
- * Also handles client-side beacon scan data from the consent script.
+ * Legacy client-scan payloads are accepted only from authenticated scanners.
+ * Public consent-script beacons use /api/v1/scan_data instead.
  *
- * Auth: X-Api-Key header or SCANNER_WEBHOOK_SECRET env var.
+ * Auth: X-Api-Key must match the required SCANNER_WEBHOOK_SECRET env var.
  */
 final class ScanWebhookHandler implements RequestHandlerInterface
 {
@@ -26,17 +27,16 @@ final class ScanWebhookHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // Validate webhook authentication
-        // Constant-time comparison. Results posted here can end up as a site's
-        // public cookie declaration, so the secret check must not leak the
-        // secret one byte at a time. Scanners send the key back on their
-        // callback; turn the secret on only once every registered scanner does.
-        $webhookSecret = trim($_ENV['SCANNER_WEBHOOK_SECRET'] ?? '');
-        if ($webhookSecret !== '') {
-            $provided = $request->getHeaderLine('X-Api-Key');
-            if (!hash_equals($webhookSecret, $provided)) {
-                return ApiResponse::error('Unauthorized', 401);
-            }
+        // Scanner observations become a site's public cookie declaration.
+        // Missing configuration must disable ingestion, never authentication.
+        $webhookSecret = trim((string) ($_ENV['SCANNER_WEBHOOK_SECRET'] ?? ''));
+        if ($webhookSecret === '') {
+            return ApiResponse::error('Scanner webhook is not configured', 503);
+        }
+
+        $provided = $request->getHeaderLine('X-Api-Key');
+        if ($provided === '' || !hash_equals($webhookSecret, $provided)) {
+            return ApiResponse::error('Unauthorized', 401);
         }
 
         $body = (array) $request->getParsedBody();

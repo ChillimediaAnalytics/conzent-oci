@@ -6,6 +6,8 @@ namespace OCI\Dashboard\Controller;
 
 use OCI\Http\Handler\RequestHandlerInterface;
 use OCI\Http\Response\ApiResponse;
+use OCI\Infrastructure\Http\ChallengeFetcherInterface;
+use OCI\Infrastructure\Http\UrlGuard;
 use OCI\Site\Repository\SiteRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,11 +21,13 @@ use Psr\Log\LoggerInterface;
  */
 final class ScriptCheckHandler implements RequestHandlerInterface
 {
-    private const HTTP_TIMEOUT = 8;
+    public const MAX_BODY_BYTES = 256 * 1024;
 
     public function __construct(
         private readonly SiteRepositoryInterface $siteRepo,
         private readonly LoggerInterface $logger,
+        private readonly UrlGuard $urlGuard,
+        private readonly ChallengeFetcherInterface $fetcher,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -39,6 +43,10 @@ final class ScriptCheckHandler implements RequestHandlerInterface
 
         if ($siteId <= 0) {
             return ApiResponse::error('Invalid site ID', 422);
+        }
+
+        if (!$this->siteRepo->belongsToUser($siteId, (int) $user['id'])) {
+            return ApiResponse::error('Site not found', 404);
         }
 
         $site = $this->siteRepo->findById($siteId);
@@ -57,16 +65,9 @@ final class ScriptCheckHandler implements RequestHandlerInterface
             ]);
         }
 
-        // Fetch the site's HTML — strip protocol from domain if present
-        $cleanDomain = (string) preg_replace('#^https?://#i', '', $domain);
-
-        // In Docker, localhost domains aren't reachable from the app container.
-        // Map localhost:PORT → the Docker service name (testsite:80).
-        if (preg_match('#^localhost(?::(\d+))?$#', $cleanDomain)) {
-            $url = 'http://testsite';
-        } else {
-            $url = 'https://' . $cleanDomain;
-        }
+        // Use the configured scheme, defaulting host-only domains to HTTPS.
+        // Production must never remap localhost to an internal Docker service.
+        $url = preg_match('#^https?://#i', $domain) === 1 ? $domain : 'https://' . $domain;
         $result = $this->checkScriptInstalled($url, $websiteKey);
 
         return ApiResponse::success($result + [
@@ -81,36 +82,47 @@ final class ScriptCheckHandler implements RequestHandlerInterface
     private function checkScriptInstalled(string $url, string $websiteKey): array
     {
         try {
-            $context = stream_context_create([
-                'http' => [
-                    'timeout' => self::HTTP_TIMEOUT,
-                    'ignore_errors' => true,
-                    'follow_location' => true,
-                    'max_redirects' => 5,
-                    'header' => "User-Agent: OCI-ScriptCheck/1.0\r\n",
-                ],
-                'ssl' => [
-                    'verify_peer' => false, // Some sites have self-signed certs
-                ],
-            ]);
+            $pin = $this->urlGuard->check($url);
+            if (!$pin['ok']) {
+                return [
+                    'installed' => false,
+                    'frameable' => false,
+                    'reason' => 'Website address blocked: ' . $pin['reason'],
+                ];
+            }
 
-            $html = @file_get_contents($url, false, $context);
-            /** @var array<int, string> $responseHeaders */
-            $responseHeaders = $http_response_header ?? [];
+            // Shared transport verifies TLS, pins the validated DNS address,
+            // caps the response body, and never follows redirects. A check in
+            // PHP must not bypass the scanner's private-network protections.
+            $fetch = $this->fetcher->fetch($url, $pin);
+            if (!$fetch['ok']) {
+                return [
+                    'installed' => false,
+                    'frameable' => false,
+                    'reason' => 'Could not reach and verify the website. Check its address and TLS certificate.',
+                ];
+            }
 
-            if ($html === false) {
-                // Try http:// fallback
-                $httpUrl = str_replace('https://', 'http://', $url);
-                $html = @file_get_contents($httpUrl, false, $context);
-                $responseHeaders = $http_response_header ?? [];
+            if ($fetch['status_code'] >= 300 && $fetch['status_code'] < 400) {
+                return [
+                    'installed' => false,
+                    'frameable' => false,
+                    'reason' => 'The website redirects. Configure its final website address and retry.',
+                ];
+            }
 
-                if ($html === false) {
-                    return [
-                        'installed' => false,
-                        'frameable' => false,
-                        'reason' => 'Could not reach the website. Make sure the domain is accessible.',
-                    ];
-                }
+            if ($fetch['status_code'] < 200 || $fetch['status_code'] >= 400) {
+                return [
+                    'installed' => false,
+                    'frameable' => false,
+                    'reason' => 'The website did not return a successful page response.',
+                ];
+            }
+
+            $html = $fetch['body'];
+            $responseHeaders = [];
+            foreach ($fetch['headers'] as $name => $value) {
+                $responseHeaders[] = $name . ': ' . $value;
             }
 
             // Check if the site allows iframing
@@ -143,7 +155,9 @@ final class ScriptCheckHandler implements RequestHandlerInterface
             return [
                 'installed' => false,
                 'frameable' => $frameable,
-                'reason' => 'Consent script not found on the website. Add the script tag to your site\'s <head> section.',
+                'reason' => $fetch['truncated']
+                    ? 'The website response exceeded the check limit. Script installation could not be confirmed.'
+                    : 'Consent script not found on the website. Add the script tag to your site\'s <head> section.',
             ];
         } catch (\Throwable $e) {
             $this->logger->warning('Script check failed: ' . $e->getMessage());
@@ -151,7 +165,7 @@ final class ScriptCheckHandler implements RequestHandlerInterface
             return [
                 'installed' => false,
                 'frameable' => false,
-                'reason' => 'Could not check the website: ' . $e->getMessage(),
+                'reason' => 'Could not check the website. Please try again.',
             ];
         }
     }

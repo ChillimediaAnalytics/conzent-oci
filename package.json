@@ -2,6 +2,9 @@
   "name": "conzent-oci",
   "private": true,
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "build": "esbuild public/assets/js/app.js --bundle --minify --outdir=public/assets/dist",
     "watch": "esbuild public/assets/js/app.js --bundle --outdir=public/assets/dist --watch",
@@ -12,7 +15,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.0",
     "axe-core": "^4.10.2",
-    "esbuild": "^0.24.0",
-    "puppeteer-core": "^23.11.1"
+    "esbuild": "0.28.2",
+    "puppeteer-core": "25.14.0"
   }
 }

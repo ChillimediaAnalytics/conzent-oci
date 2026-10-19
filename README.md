@@ -1,3 +1,5 @@
+> **Chillimedia fork:** [Oderland deployment and operation](deployment/chillimedia/README.md) · [WordPress connector](deployment/chillimedia/wordpress/README.md).
+
 <p align="center">
   <img src="public/media/primary-light.png" alt="Conzent OCI" width="280">
 </p>

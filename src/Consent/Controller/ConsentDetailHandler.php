@@ -7,6 +7,7 @@ namespace OCI\Consent\Controller;
 use OCI\Consent\Repository\ConsentRepositoryInterface;
 use OCI\Http\Handler\RequestHandlerInterface;
 use OCI\Http\Response\ApiResponse;
+use OCI\Site\Repository\SiteRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Twig\Environment as TwigEnvironment;
@@ -19,6 +20,7 @@ final class ConsentDetailHandler implements RequestHandlerInterface
     public function __construct(
         private readonly ConsentRepositoryInterface $consentRepo,
         private readonly TwigEnvironment $twig,
+        private readonly SiteRepositoryInterface $siteRepo,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -34,7 +36,8 @@ final class ConsentDetailHandler implements RequestHandlerInterface
         }
 
         $consent = $this->consentRepo->getConsentWithCategories($consentId);
-        if ($consent === null) {
+        if ($consent === null
+            || !$this->siteRepo->belongsToUser((int) $consent['site_id'], (int) $user['id'])) {
             return ApiResponse::error('Consent record not found', 404);
         }
 

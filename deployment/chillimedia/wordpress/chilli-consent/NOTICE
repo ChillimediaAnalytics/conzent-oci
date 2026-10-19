@@ -1,0 +1,30 @@
+Chilli Consent WordPress connector 2.2.4.1
+
+Based on GetConzent CMP — Cookie Banner & Consent Management 2.2.4,
+published by Conzent ApS on WordPress.org.
+Upstream: https://wordpress.org/plugins/getconzent-cmp-cookie-banner-consent-management/
+Source: https://downloads.wordpress.org/plugin/getconzent-cmp-cookie-banner-consent-management.2.2.4.zip
+Source ZIP SHA-256: d9c5fd0cf3c96334c5b22b05147fd2d4e1d7ea38f65aedf8fe0dfc25e641b5b7
+
+Original copyright/licence notices are preserved in LICENSE. The upstream
+LICENSE states GPL version 3 or, at your option, a later version. This
+modified connector is distributed under those same terms. Its source is
+included in the installation ZIP.
+
+Modified by Chillimedia on 2026-10-19:
+- Renamed plugin identity, main file, visible branding and documentation.
+- Fixed endpoint to consent.chillimedia.se; legacy options/config cannot
+  redirect activation, API or banner requests to Conzent Cloud.
+- Added independent Update URI; Chillimedia distributes future updates.
+- Safe remote API calls, disabled redirects for verification, explicit
+  overview capability check and safe external-link attributes.
+- Separate actual verification status from the legacy loader-enabled flag;
+  retain manually entered keys with an explicit pending status when offline.
+- Read asynchronous banner state at event time; exact cookie-name matching,
+  safe cookie decoding and object-based consent category mapping.
+- Removed upstream logo; standard WordPress dashboard icon used.
+
+Function prefixes, option names, cron hooks, text domain and shortcodes
+remain compatible with upstream. The two plugins must not be active together.
+Upstream product names here identify provenance; no endorsement or transfer
+of upstream vendor certification is claimed.

@@ -38,7 +38,7 @@ use function strlen;
 /**
  * cURL implementation of the challenge fetch. The options mirror the
  * diagnostics HomepageFetcher with three deliberate differences: no redirect
- * handling at all, a 4 KB body cap (the responder answers with 64 characters),
+ * handling at all, a default 4 KB body cap (claim responders answer with 64 characters),
  * and no retry without TLS verification. A site whose certificate does not
  * verify is reported as unreachable; nothing here ever talks to a host it
  * cannot verify.
@@ -52,13 +52,19 @@ final class CurlChallengeFetcher implements ChallengeFetcherInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
-    ) {}
+        private readonly int $maxBodyBytes = self::MAX_BODY_BYTES,
+    ) {
+        if ($maxBodyBytes <= 0) {
+            throw new \InvalidArgumentException('Response body limit must be positive');
+        }
+    }
 
     public function fetch(string $url, array $pin): array
     {
         $headers = [];
         $body = '';
         $truncated = false;
+        $maxBodyBytes = $this->maxBodyBytes;
 
         $ch = curl_init();
         $options = [
@@ -79,9 +85,9 @@ final class CurlChallengeFetcher implements ChallengeFetcherInterface
                 }
                 return strlen($line);
             },
-            CURLOPT_WRITEFUNCTION => static function ($ch, string $chunk) use (&$body, &$truncated): int {
-                if (strlen($body) + strlen($chunk) > self::MAX_BODY_BYTES) {
-                    $body .= substr($chunk, 0, self::MAX_BODY_BYTES - strlen($body));
+            CURLOPT_WRITEFUNCTION => static function ($ch, string $chunk) use (&$body, &$truncated, $maxBodyBytes): int {
+                if (strlen($body) + strlen($chunk) > $maxBodyBytes) {
+                    $body .= substr($chunk, 0, $maxBodyBytes - strlen($body));
                     $truncated = true;
                     return -1; // abort the transfer, keep what we have
                 }
@@ -102,7 +108,7 @@ final class CurlChallengeFetcher implements ChallengeFetcherInterface
         $errno = curl_errno($ch);
         $statusCode = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $errorMessage = curl_error($ch);
-        curl_close($ch);
+        unset($ch); // CurlHandle objects release on destruction (PHP 8+).
 
         // A deliberate abort past the byte cap is not an error.
         if ($errno === CURLE_WRITE_ERROR && $truncated) {

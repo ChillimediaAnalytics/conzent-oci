@@ -1,0 +1,25 @@
+{
+  "upstream_name": "GetConzent CMP",
+  "upstream_version": "2.2.4",
+  "wordpress_slug": "getconzent-cmp-cookie-banner-consent-management",
+  "source_url": "https://downloads.wordpress.org/plugin/getconzent-cmp-cookie-banner-consent-management.2.2.4.zip",
+  "source_sha256": "d9c5fd0cf3c96334c5b22b05147fd2d4e1d7ea38f65aedf8fe0dfc25e641b5b7",
+  "retrieved_date": "2026-10-19",
+  "fork_version": "2.2.4.1",
+  "fork_slug": "chilli-consent",
+  "fixed_service_url": "https://consent.chillimedia.se",
+  "license": "GPL-3.0-or-later",
+  "update_owner": "Chillimedia; no automatic update service configured",
+  "upstream_file_sha256": {
+    "LICENSE": "526cf879f8d8ca84f2beaa0577003a9c4c1aaa4b592d7ce1b924f6cd2f9d51de",
+    "assets/css/conzent-banner-admin.css": "d7d59b8421cbd3db191e2365213cc840b50f4d0ea63ac7d8e4dbeff17c3d952c",
+    "assets/css/conzent-banner.css": "ae7446b065ff2ac451633a4840b0fb4c7e8c1f0974cc751132bf566df9e8e102",
+    "assets/js/conzent-banner.js": "500bac0fee1069b0d6219d4adadc56fbfaf2a810b7f5b67fd5579b8f87af37fd",
+    "conzent-logo.png": "157114541a5c324cc1713f3bdd39bb8f67b1f0e4fc65ec5788224d02a9371e1e",
+    "conzent.php": "20775c557c12b79a6554d9af2a9c23d380a95eba5f915246f65afedd3fd6a185",
+    "includes/request-guard.php": "6a158c90e9d9f9fa7b0b1abcc8b120a3d1e6a91df8fd9505e7a4294e36cf4fd2",
+    "languages/getconzent-cmp-cookie-banner-consent-management.pot": "cb61208b4bde13455be1bdc0bc438b1d4ffdff264d6330eb28d7c90c9dc5bfbf",
+    "readme.txt": "6b2aa34f7408356439e1a84684d4a8ce956bd9ea81ff1a0c3de01dca1dd1d851",
+    "uninstall.php": "f5bd666d8e7cb28a54b4d04c0da60c34b928cc01fbd06a2d7614641aceba6b28"
+  }
+}

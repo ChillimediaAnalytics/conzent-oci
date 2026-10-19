@@ -7,6 +7,7 @@ namespace OCI\Consent\Controller;
 use OCI\Consent\Repository\ConsentRepositoryInterface;
 use OCI\Http\Handler\RequestHandlerInterface;
 use OCI\Http\Response\ApiResponse;
+use OCI\Site\Repository\SiteRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -20,6 +21,7 @@ final class ConsentAnalyticsHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly ConsentRepositoryInterface $consentRepo,
+        private readonly SiteRepositoryInterface $siteRepo,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -36,6 +38,12 @@ final class ConsentAnalyticsHandler implements RequestHandlerInterface
 
         if ($siteId <= 0) {
             return ApiResponse::error('Invalid site ID', 422);
+        }
+
+        // A valid session alone does not grant access to every site's data.
+        // Use the same non-disclosing response as the scan status endpoint.
+        if (!$this->siteRepo->belongsToUser($siteId, (int) $user['id'])) {
+            return ApiResponse::error('Site not found', 404);
         }
 
         if (!\in_array($days, [7, 30, 90], true)) {

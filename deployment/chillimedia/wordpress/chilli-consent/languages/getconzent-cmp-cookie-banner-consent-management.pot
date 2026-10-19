@@ -1,0 +1,264 @@
+# Copyright (C) 2026 Conzent ApS
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: GetConzent CMP — Cookie Banner & Consent Management 2.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/plugin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-10T10:51:53+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: getconzent-cmp-cookie-banner-consent-management\n"
+
+#. Plugin Name of the plugin
+#: conzent.php
+msgid "GetConzent CMP — Cookie Banner & Consent Management"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: conzent.php
+msgid "https://getconzent.com/"
+msgstr ""
+
+#. Description of the plugin
+#: conzent.php
+msgid "GDPR, CCPA & ePrivacy compliant cookie banner. IAB TCF v2.4 (2.2 + 2.3) and Google CMP Certified. Supports self-hosted (OCI) and Conzent Cloud."
+msgstr ""
+
+#. Author of the plugin
+#: conzent.php
+msgid "Conzent ApS"
+msgstr ""
+
+#. Author URI of the plugin
+#: conzent.php
+msgid "https://getconzent.com/about/"
+msgstr ""
+
+#: conzent.php:310
+msgid "Conzent Consent ID"
+msgstr ""
+
+#: conzent.php:526
+msgid "Automatic setup is not pending."
+msgstr ""
+
+#: conzent.php:529
+msgid "The next attempt is not due yet."
+msgstr ""
+
+#: conzent.php:532
+msgid "Another attempt is running."
+msgstr ""
+
+#: conzent.php:552
+msgid "This site has no public hostname to claim. Enter the website key by hand."
+msgstr ""
+
+#. translators: %s: the Conzent server hostname
+#: conzent.php:600
+#, php-format
+msgid "Outbound HTTP is blocked on this site (WP_HTTP_BLOCK_EXTERNAL). Add %s to WP_ACCESSIBLE_HOSTS or enter the website key by hand."
+msgstr ""
+
+#. translators: 1: the Conzent server URL, 2: the error text
+#: conzent.php:607
+#, php-format
+msgid "Automatic setup could not reach %1$s: %2$s"
+msgstr ""
+
+#. translators: %s: the address the server redirects to
+#: conzent.php:621
+#, php-format
+msgid "The Server URL redirects to %s. Set the Server URL to that address."
+msgstr ""
+
+#. translators: %s: the Conzent server URL
+#: conzent.php:631
+#, php-format
+msgid "The Conzent server at %s does not support automatic setup. Enter the website key by hand."
+msgstr ""
+
+#. translators: %d: the HTTP status
+#: conzent.php:639
+#, php-format
+msgid "The Conzent server answered HTTP %d."
+msgstr ""
+
+#. translators: %d: the HTTP status
+#: conzent.php:646
+#, php-format
+msgid "The Conzent server answered HTTP %d with an unexpected body."
+msgstr ""
+
+#. translators: %s: the site's domain
+#: conzent.php:719
+#, php-format
+msgid "Configured automatically for %s."
+msgstr ""
+
+#: conzent.php:751
+#: conzent.php:762
+msgid "You do not have permission to do this."
+msgstr ""
+
+#. translators: 1: the site's domain, 2: a human time difference
+#: conzent.php:806
+#, php-format
+msgid "Conzent automatic setup for %1$s is waiting for you. The plugin checks again in %2$s and keeps checking until the site is set up."
+msgstr ""
+
+#. translators: 1: the site's domain, 2: a human time difference
+#: conzent.php:810
+#, php-format
+msgid "Conzent automatic setup for %1$s is still trying. Next attempt in %2$s."
+msgstr ""
+
+#: conzent.php:818
+#: conzent.php:1036
+msgid "Retry now"
+msgstr ""
+
+#: conzent.php:820
+msgid "Open Conzent"
+msgstr ""
+
+#: conzent.php:822
+#: conzent.php:871
+#: conzent.php:872
+#: conzent.php:904
+msgid "Settings"
+msgstr ""
+
+#: conzent.php:823
+msgid "Dismiss"
+msgstr ""
+
+#. translators: 1: the site's domain, 2: a date
+#: conzent.php:836
+#, php-format
+msgid "Configured automatically for %1$s on %2$s."
+msgstr ""
+
+#. translators: %s: a human time difference
+#: conzent.php:843
+#, php-format
+msgid "Automatic setup runs in %s."
+msgstr ""
+
+#. translators: 1: the last message from the server, 2: a human time difference
+#: conzent.php:846
+#, php-format
+msgid "%1$s The plugin checks again in %2$s and keeps checking until the site is set up."
+msgstr ""
+
+#: conzent.php:849
+msgid "Configured manually."
+msgstr ""
+
+#: conzent.php:850
+msgid "No website key yet."
+msgstr ""
+
+#: conzent.php:853
+msgid "Automatic setup has not run yet."
+msgstr ""
+
+#: conzent.php:854
+msgid "Automatic setup is switched off in wp-config.php."
+msgstr ""
+
+#: conzent.php:861
+#: conzent.php:862
+msgid "GetConzent CMP"
+msgstr ""
+
+#: conzent.php:888
+msgid "Welcome to GetConzent CMP"
+msgstr ""
+
+#: conzent.php:892
+#: conzent.php:992
+msgid "Website Key:"
+msgstr ""
+
+#: conzent.php:896
+msgid "Verified:"
+msgstr ""
+
+#: conzent.php:900
+msgid "Setup:"
+msgstr ""
+
+#: conzent.php:907
+#: conzent.php:1050
+msgid "Open Conzent Dashboard"
+msgstr ""
+
+#: conzent.php:915
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: conzent.php:942
+msgid "Settings saved and website verified."
+msgstr ""
+
+#: conzent.php:953
+msgid "Settings saved. Could not verify website key — the banner will still load."
+msgstr ""
+
+#: conzent.php:959
+msgid "Settings saved."
+msgstr ""
+
+#: conzent.php:980
+msgid "GetConzent CMP Settings"
+msgstr ""
+
+#: conzent.php:997
+msgid "Find this in your Conzent dashboard under Site Settings."
+msgstr ""
+
+#: conzent.php:1003
+msgid "Server URL:"
+msgstr ""
+
+#: conzent.php:1010
+msgid "Set by CONZENT_SERVER_URL in wp-config.php."
+msgstr ""
+
+#: conzent.php:1012
+msgid "Leave empty for Conzent Cloud. For self-hosted (OCI), enter your server URL."
+msgstr ""
+
+#: conzent.php:1019
+msgid "Status:"
+msgstr ""
+
+#: conzent.php:1020
+msgid "Verified"
+msgstr ""
+
+#: conzent.php:1025
+msgid "Save Settings"
+msgstr ""
+
+#: conzent.php:1030
+msgid "Automatic setup:"
+msgstr ""
+
+#: conzent.php:1037
+msgid "Configure automatically"
+msgstr ""
+
+#: conzent.php:1040
+msgid "Create site in Conzent"
+msgstr ""
+
+#: conzent.php:1043
+msgid "Automatic setup asks Conzent for the website key of this domain and keeps asking until it gets one. The site must exist in your Conzent account; nothing is created from here."
+msgstr ""

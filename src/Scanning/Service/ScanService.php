@@ -414,6 +414,11 @@ final class ScanService
      */
     private function executeScan(int $scanId, array $scan): void
     {
+        $webhookSecret = trim((string) ($_ENV['SCANNER_WEBHOOK_SECRET'] ?? ''));
+        if ($webhookSecret === '') {
+            throw new \RuntimeException('SCANNER_WEBHOOK_SECRET is required to dispatch scans');
+        }
+
         // Mark as in_progress
         $this->scanRepo->updateScan($scanId, [
             'scan_status' => 'in_progress',
@@ -470,14 +475,8 @@ final class ScanService
             'urls' => $urlStrings,
             'callback_url' => $callbackUrl,
             'options' => $this->scanOptions($scan),
+            'callback_api_key' => $webhookSecret,
         ];
-
-        // The webhook checks X-Api-Key whenever the secret is set; the
-        // scanner sends back whatever it is given here.
-        $webhookSecret = trim((string) ($_ENV['SCANNER_WEBHOOK_SECRET'] ?? ''));
-        if ($webhookSecret !== '') {
-            $request['callback_api_key'] = $webhookSecret;
-        }
 
         // Mark URLs as scanning before dispatch. The webhook only accepts
         // results for scanning URLs, and the scanner starts work as soon as it

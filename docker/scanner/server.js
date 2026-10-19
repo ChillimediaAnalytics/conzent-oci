@@ -12,20 +12,32 @@
  * Environment:
  *   PORT                 — HTTP port (default 8300)
  *   SCANNER_API_KEY      — Required API key for authentication
- *   SCANNER_CALLBACK_KEY — X-Api-Key sent on result callbacks when the batch
- *                          request does not carry its own callback_api_key
+ *   SCANNER_CALLBACK_KEY — X-Api-Key sent on result callbacks for the configured trusted webhook; API callers cannot override it
+ *   SCANNER_CALLBACK_ALLOWED_URLS — Exact trusted webhook URLs (comma-separated)
+ *   SCANNER_BLOCKED_HOSTS — Additional hostnames/IPs scans cannot reach
  *   MAX_CONCURRENT       — Max concurrent browser scans (default 3)
  *   SCAN_TIMEOUT         — Per-page timeout in ms (default 60000)
  */
 
 const http = require('http');
+const { timingSafeEqual } = require('node:crypto');
+const { createCallbackSender } = require('./lib/callback');
 const { CookieScanner } = require('./lib/scanner');
 
 const PORT = parseInt(process.env.PORT || '8300', 10);
 const API_KEY = process.env.SCANNER_API_KEY || '';
 const MAX_CONCURRENT = parseInt(process.env.MAX_CONCURRENT || '3', 10);
 const SCAN_TIMEOUT = parseInt(process.env.SCAN_TIMEOUT || '60000', 10);
+const MAX_BATCH_URLS = Math.min(Math.max(parseInt(process.env.SCANNER_MAX_BATCH_URLS || '500', 10) || 500, 1), 10000);
 const CALLBACK_KEY = process.env.SCANNER_CALLBACK_KEY || '';
+const CALLBACK_URLS = (process.env.SCANNER_CALLBACK_ALLOWED_URLS || '').split(',').map(s => s.trim()).filter(Boolean);
+
+// Fail closed in every environment; production also rejects short secrets.
+if (!API_KEY || (process.env.NODE_ENV === 'production' && (Buffer.byteLength(API_KEY) < 32 || Buffer.byteLength(CALLBACK_KEY) < 32 || CALLBACK_URLS.length === 0))) {
+  console.error('Scanner requires SCANNER_API_KEY; production also requires 32-byte API/callback secrets and SCANNER_CALLBACK_ALLOWED_URLS.');
+  process.exit(1);
+}
+const callbacks = createCallbackSender({ allowedUrls: CALLBACK_URLS, apiKey: CALLBACK_KEY });
 
 // What this scanner understands, so the app can tell an upgraded scanner from
 // an old one before asking it for a pass it cannot run.
@@ -78,6 +90,7 @@ const server = http.createServer(async (req, res) => {
         return respond(res, 400, { error: 'url is required' });
       }
 
+      if (jobs.size > 100 || scanner.activeCount >= MAX_CONCURRENT) return respond(res, 429, { error: 'Scanner is busy' });
       const result = await scanner.scanUrl(body.url, body.options || {});
       return respond(res, 200, { success: true, data: result });
     }
@@ -89,8 +102,12 @@ const server = http.createServer(async (req, res) => {
         return respond(res, 400, { error: 'urls array is required' });
       }
 
-      const jobId = String(++jobCounter);
+      if (body.urls.length > MAX_BATCH_URLS) return respond(res, 400, { error: `At most ${MAX_BATCH_URLS} URLs per batch` });
+      if (jobs.size >= 100 || scanner.activeCount >= MAX_CONCURRENT) return respond(res, 429, { error: 'Scanner is busy' });
+      for (const scanUrl of body.urls) await scanner.networkPolicy.resolve(scanUrl);
       const callbackUrl = body.callback_url || null;
+      if (callbackUrl) callbacks.validate(callbackUrl);
+      const jobId = String(++jobCounter);
       const scanId = body.scan_id || null;
 
       jobs.set(jobId, {
@@ -99,7 +116,6 @@ const server = http.createServer(async (req, res) => {
         // Echoed back so the app can tell this dispatch's results from a
         // stale one after a retry re-dispatched the same scan.
         dispatchId: body.dispatch_id || null,
-        callbackApiKey: body.callback_api_key || CALLBACK_KEY,
         status: 'running',
         total: body.urls.length,
         completed: 0,
@@ -150,8 +166,9 @@ const server = http.createServer(async (req, res) => {
     return respond(res, 404, { error: 'Not found' });
 
   } catch (err) {
-    console.error('Request error:', err);
-    return respond(res, 500, { error: 'Internal server error' });
+    console.error('Request error:', err.message);
+    const status = err.statusCode || 500;
+    return respond(res, status, { error: status < 500 ? err.message : 'Internal server error' });
   }
 });
 
@@ -184,7 +201,7 @@ async function processBatchScan(jobId, urls, options, callbackUrl) {
   // Send results to callback URL if provided
   if (callbackUrl) {
     try {
-      await postCallback(callbackUrl, {
+      await callbacks.send(callbackUrl, {
         job_id: jobId,
         scan_id: job.scanId,
         ...(job.dispatchId ? { dispatch_id: job.dispatchId } : {}),
@@ -193,7 +210,7 @@ async function processBatchScan(jobId, urls, options, callbackUrl) {
         completed: job.completed,
         failed: job.failed,
         results: job.results,
-      }, job.callbackApiKey);
+      });
     } catch (err) {
       console.error(`Callback to ${callbackUrl} failed:`, err.message);
     }
@@ -206,9 +223,11 @@ async function processBatchScan(jobId, urls, options, callbackUrl) {
 // ── Helpers ─────────────────────────────────────────────
 
 function authenticateRequest(req) {
-  if (!API_KEY) return true; // No key configured = open (dev mode)
-  const provided = req.headers['x-api-key'] || '';
-  return provided === API_KEY;
+  const provided = req.headers['x-api-key'];
+  if (!API_KEY || typeof provided !== 'string') return false;
+  const expected = Buffer.from(API_KEY);
+  const actual = Buffer.from(provided);
+  return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
 
 function respond(res, status, data) {
@@ -219,58 +238,30 @@ function respond(res, status, data) {
 function readBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(Buffer.concat(chunks).toString()));
-      } catch {
-        reject(new Error('Invalid JSON body'));
-      }
-    });
-    req.on('error', reject);
-  });
-}
-
-async function postCallback(url, data, apiKey = '') {
-  const payload = JSON.stringify(data);
-  const parsed = new URL(url);
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Content-Length': Buffer.byteLength(payload),
-  };
-  // The app's webhook checks X-Api-Key whenever SCANNER_WEBHOOK_SECRET is
-  // set. This header used to be missing, so turning the secret on would have
-  // rejected every result without a word.
-  if (apiKey) {
-    headers['X-Api-Key'] = apiKey;
-  }
-
-  const options = {
-    hostname: parsed.hostname,
-    port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
-    path: parsed.pathname + parsed.search,
-    method: 'POST',
-    headers,
-  };
-
-  const lib = parsed.protocol === 'https:' ? require('https') : require('http');
-
-  return new Promise((resolve, reject) => {
-    const req = lib.request(options, (res) => {
-      res.resume();
-      // A rejected callback is a lost scan; say so instead of treating any
-      // answer as delivery.
-      if (res.statusCode >= 400) {
-        reject(new Error(`Callback answered ${res.statusCode}`));
+    let bytes = 0;
+    req.on('data', chunk => {
+      bytes += chunk.length;
+      if (bytes > 1024 * 1024) {
+        const error = new Error('Request body is too large');
+        error.statusCode = 413;
+        reject(error);
+        req.resume();
         return;
       }
-      resolve();
+      chunks.push(chunk);
+    });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(Buffer.concat(chunks).toString());
+        if (!data || Array.isArray(data) || typeof data !== 'object') throw new Error();
+        resolve(data);
+      } catch {
+        const error = new Error('Invalid JSON body');
+        error.statusCode = 400;
+        reject(error);
+      }
     });
     req.on('error', reject);
-    req.setTimeout(10000, () => { req.destroy(); reject(new Error('Callback timeout')); });
-    req.write(payload);
-    req.end();
   });
 }
 
@@ -318,7 +309,7 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`OCI Scanner listening on port ${PORT}`);
   console.log(`Max concurrent scans: ${MAX_CONCURRENT}`);
   console.log(`Scan timeout: ${SCAN_TIMEOUT}ms`);
-  console.log(`API key: ${API_KEY ? 'configured' : 'NOT SET (open mode)'}`);
+  console.log('API key: configured');
 });
 
 initBrowserWithRetry();

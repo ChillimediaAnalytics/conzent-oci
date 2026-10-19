@@ -7,6 +7,7 @@ namespace OCI\Banner\Controller;
 use OCI\Banner\Service\ScriptGenerationService;
 use OCI\Http\Handler\RequestHandlerInterface;
 use OCI\Http\Response\ApiResponse;
+use OCI\Site\Repository\SiteRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -17,20 +18,25 @@ final class GenerateScriptHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly ScriptGenerationService $scriptService,
+        private readonly SiteRepositoryInterface $siteRepo,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $session = $request->getAttribute('session');
-        $userId = (int) ($session['user_id'] ?? 0);
+        $user = $request->getAttribute('user');
+        $userId = (int) ($user['id'] ?? 0);
 
         if ($userId === 0) {
             return ApiResponse::error('Unauthorized', 401);
         }
 
         $siteId = (int) ($request->getAttribute('id') ?? 0);
-        if ($siteId === 0) {
+        if ($siteId <= 0) {
             return ApiResponse::error('Invalid site ID', 400);
+        }
+
+        if (!$this->siteRepo->belongsToUser($siteId, $userId)) {
+            return ApiResponse::error('Site not found', 404);
         }
 
         $success = $this->scriptService->generate($siteId);

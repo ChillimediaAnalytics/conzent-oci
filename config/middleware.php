@@ -26,6 +26,7 @@ return [
         // After Auth so the user attribute exists, before AuditTrail so a
         // request held at the 2FA prompt is not logged as a completed action.
         OCI\Http\Middleware\TwoFactorMiddleware::class,
+        OCI\Http\Middleware\SameOriginMiddleware::class,
         OCI\Http\Middleware\AuditTrailMiddleware::class,
     ],
 
@@ -59,6 +60,7 @@ return [
         OCI\Http\Middleware\AuthMiddleware::class,
         OCI\Http\Middleware\TwoFactorMiddleware::class,
         OCI\Http\Middleware\AgencyMiddleware::class,
+        OCI\Http\Middleware\SameOriginMiddleware::class,
         OCI\Http\Middleware\AuditTrailMiddleware::class,
     ],
 
@@ -73,6 +75,7 @@ return [
         OCI\Http\Middleware\AuthMiddleware::class,
         OCI\Http\Middleware\TwoFactorMiddleware::class,
         OCI\Http\Middleware\AgencyMiddleware::class,
+        OCI\Http\Middleware\SameOriginMiddleware::class,
         OCI\Http\Middleware\CsrfMiddleware::class,
         OCI\Http\Middleware\AuditTrailMiddleware::class,
     ],
@@ -83,6 +86,7 @@ return [
         OCI\Http\Middleware\AuthMiddleware::class,
         OCI\Http\Middleware\TwoFactorMiddleware::class,
         OCI\Http\Middleware\AdminMiddleware::class,
+        OCI\Http\Middleware\SameOriginMiddleware::class,
         OCI\Http\Middleware\AuditTrailMiddleware::class,
     ],
 

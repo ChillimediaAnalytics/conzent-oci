@@ -12,7 +12,7 @@
 # Run:    docker run -p 8300:8300 -e SCANNER_API_KEY=secret oci-scanner
 # ─────────────────────────────────────────────────────────
 
-FROM node:20-slim
+FROM node:24.19.0-bookworm-slim
 
 # Chrome runtime libraries + fonts. We DON'T install the distro `chromium`
 # package (its rolling v150 build crashes with SIGILL on some CPUs); instead we
@@ -20,6 +20,7 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    unzip \
     fonts-liberation \
     fonts-noto-color-emoji \
     fonts-noto-cjk \
@@ -51,13 +52,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Install a pinned, automation-QA'd Chrome-for-Testing build and expose it at a
-# stable path. `chrome@stable` resolves to the current Chrome-for-Testing stable
-# channel (tested for headless automation — unlike the Debian package that
-# SIGILL'd). Pin an explicit version (e.g. chrome@131.0.6778.204) for fully
-# reproducible builds. The trailing `--version` fails the build early if the
+# Install a pinned Chrome-for-Testing build and expose it at a stable path.
+# The trailing `--version` fails the build early if the
 # binary or a shared library is missing.
-RUN npx --yes @puppeteer/browsers install chrome@stable --path /opt/chrome \
+ARG CHROME_VERSION=155.0.8059.84
+RUN npx --yes @puppeteer/browsers@3.2.5 install chrome@${CHROME_VERSION} --path /opt/chrome \
     && ln -sf "$(find /opt/chrome -type f -name chrome -path '*chrome-linux64*' | head -n1)" /usr/local/bin/chrome \
     && /usr/local/bin/chrome --version
 
@@ -71,7 +70,7 @@ WORKDIR /opt/scanner
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json* ./
-RUN npm ci --production 2>/dev/null || npm install --production
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund
 
 # Copy scanner application
 COPY server.js ./
