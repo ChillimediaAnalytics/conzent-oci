@@ -1,0 +1,298 @@
+/* Chillimedia brand layer. Keep upstream components and consent behaviour. */
+:root,
+[data-theme="light"] {
+  --chilli-red: #ff3d00;
+  --chilli-lavender: #ecdcff;
+  --chilli-violet: #9d57ff;
+  --chilli-action: #7038ac;
+  --chilli-action-hover: #59298d;
+  --oci-brand-gradient: #7038ac;
+  --oci-brand-accent: #7038ac;
+  --oci-btn-primary-bg: #7038ac;
+  --oci-btn-primary-hover: #59298d;
+  --oci-primary: #7038ac;
+  --oci-primary-dark: #59298d;
+  --oci-primary-light: #f0e5ff;
+  --oci-bg: #faf6f3;
+  --oci-bg-alt: #ffffff;
+  --oci-bg-sidebar: #fffdfb;
+  --oci-text: #403744;
+  --oci-text-light: #746b76;
+  --oci-text-heading: #211625;
+  --oci-border: #e7e0e8;
+  --oci-border-content: #e7e0e8;
+  --oci-card-bg: #ffffff;
+  --oci-card-shadow: 0 2px 8px rgb(42 24 53 / 3%);
+  --oci-navbar-bg: #fffdfb;
+  --oci-input-bg: #ffffff;
+  --oci-input-border: #cfc5d4;
+  --oci-hover-bg: #f5eefb;
+  --oci-sidebar-active-bg: #ecdcff;
+  --oci-sidebar-active-text: #59298d;
+  --oci-tag-bg: #f3edf8;
+  --oci-tag-text: #594b65;
+  --bulma-primary-h: 269;
+  --bulma-primary-s: 51%;
+  --bulma-primary-l: 45%;
+  --bulma-link-h: 269;
+  --bulma-link-s: 51%;
+  --bulma-link-l: 45%;
+}
+
+[data-theme="dark"] {
+  --oci-brand-gradient: #c7a0f4;
+  --oci-brand-accent: #c7a0f4;
+  --oci-btn-primary-bg: #7038ac;
+  --oci-btn-primary-hover: #59298d;
+  --oci-primary: #c7a0f4;
+  --oci-primary-dark: #dfc6ff;
+  --oci-primary-light: #362541;
+  --oci-bg: #19161d;
+  --oci-bg-alt: #242029;
+  --oci-bg-sidebar: #211c26;
+  --oci-text: #e1d9e8;
+  --oci-text-light: #b7aabd;
+  --oci-text-heading: #faf6f3;
+  --oci-border: #423747;
+  --oci-border-content: #423747;
+  --oci-card-bg: #242029;
+  --oci-navbar-bg: #211c26;
+  --oci-input-bg: #2d2634;
+  --oci-input-border: #62546d;
+  --oci-hover-bg: #352a3e;
+  --oci-sidebar-active-bg: #3b2850;
+  --oci-sidebar-active-text: #dfc6ff;
+  --oci-tag-bg: #352a3e;
+  --oci-tag-text: #e1d9e8;
+}
+
+/* Brand violet is darkened for controls: white on the original violet/red
+   does not meet normal-text contrast. Semantic status colours stay upstream. */
+.button.is-primary {
+  --bulma-button-h: 269 !important;
+  --bulma-button-s: 51% !important;
+  --bulma-button-l: 45% !important;
+  --bulma-button-background-l: 45% !important;
+  --bulma-button-border-l: 45% !important;
+  background-image: none !important;
+}
+
+.button.is-primary:focus-visible,
+.button.is-primary.is-focused {
+  outline: 2px solid var(--oci-primary);
+  outline-offset: 3px;
+  box-shadow: none !important;
+}
+
+.button.is-primary:focus {
+  box-shadow: 0 0 0 3px var(--oci-primary-light) !important;
+}
+
+.button.is-primary.is-outlined {
+  border-color: var(--oci-primary) !important;
+  background-color: transparent !important;
+  color: var(--oci-primary) !important;
+}
+
+.button.is-primary.is-outlined:hover {
+  background-color: var(--oci-primary-light) !important;
+}
+
+.has-text-primary {
+  color: var(--oci-primary) !important;
+}
+
+.has-background-primary {
+  background-color: var(--oci-btn-primary-bg) !important;
+  color: #ffffff;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--oci-btn-primary-bg);
+}
+
+.chilli-product-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.oci-navbar-brand .brand-logo-full {
+  display: block;
+  width: 103px;
+  height: 28px;
+}
+
+.oci-navbar-brand .brand-logo-icon {
+  display: none;
+}
+
+.chilli-product-name {
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--oci-border);
+  color: var(--oci-text-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* A quiet sign-in surface using the same lavender and warm white as Chilli. */
+.auth-page {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+  background: var(--oci-bg);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.auth-logo .logo-img {
+  display: block;
+  width: 164px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.auth-product-name {
+  border-left: 1px solid var(--oci-input-border);
+  padding: 0.45rem 0 0.45rem 1.25rem;
+  color: var(--oci-text-heading);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.auth-card {
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--oci-border);
+  border-top: 4px solid var(--chilli-lavender);
+  border-radius: 14px;
+  background: var(--oci-card-bg);
+  box-shadow: 0 8px 32px rgb(42 24 53 / 4%);
+}
+
+.auth-card .title {
+  color: var(--oci-text-heading);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.auth-card .label {
+  color: var(--oci-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.auth-card .input {
+  min-height: 46px;
+  border-color: var(--oci-input-border);
+  border-radius: 8px;
+  background: var(--oci-input-bg);
+  color: var(--oci-text);
+  font-size: 0.95rem;
+  box-shadow: none;
+}
+
+.auth-card .input:focus {
+  border-color: var(--oci-primary);
+  box-shadow: 0 0 0 3px var(--oci-primary-light);
+}
+
+.auth-card .checkbox {
+  color: var(--oci-text-light) !important;
+}
+
+.auth-card .button.is-primary {
+  min-height: 46px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--oci-text-light);
+  font-size: 0.8rem;
+}
+
+.auth-footer a {
+  color: var(--oci-primary);
+}
+
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--oci-input-border);
+  border-radius: 8px;
+  background: var(--oci-input-bg);
+  color: var(--oci-text);
+  font: 500 0.95rem "Inter", sans-serif;
+}
+
+.btn-google:hover {
+  border-color: var(--oci-primary);
+  background: var(--oci-hover-bg);
+  color: var(--oci-text-heading);
+}
+
+.btn-google svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--oci-text-light);
+  font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--oci-border);
+}
+
+@media (max-width: 1023px) {
+  .oci-navbar-brand .brand-logo-full { display: none; }
+  .oci-navbar-brand .brand-logo-icon { display: block; width: 34px; height: 34px; }
+}
+
+@media (max-width: 480px) {
+  .chilli-product-brand { gap: 0; }
+  .chilli-product-name { display: none; }
+  .auth-page { padding: 2rem 1rem; }
+  .auth-card { padding: 2rem 1.5rem; }
+  .auth-logo { gap: 1rem; }
+  .auth-logo .logo-img { width: 140px; height: 39px; }
+  .auth-product-name { padding-left: 1rem; font-size: 1.1rem; }
+}

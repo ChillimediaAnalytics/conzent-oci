@@ -4,8 +4,12 @@
 
     {# ── Col 1: Brand / Logo ── #}
     <div class="oci-navbar-brand">
-        <a href="/" style="display:flex;align-items:center;gap:0.375rem;text-decoration:none">
-            <img :src="theme === 'dark' ? '/media/chilli-consent-dark.svg' : '/media/chilli-consent-light.svg'" alt="Chilli Consent" class="brand-logo-full" style="height:22px;display:block">
+        <a href="/" class="chilli-product-brand" aria-label="Chilli Consent — home">
+            <img src="/media/chillimedia-mark.svg" alt="" class="brand-logo-icon" width="34" height="34">
+            <img src="/media/chillimedia-logo.svg"
+                 :src="theme === 'dark' ? '/media/chillimedia-logo-on-dark.svg' : '/media/chillimedia-logo.svg'"
+                 alt="Chillimedia" class="brand-logo-full" width="103" height="28">
+            <span class="chilli-product-name">Consent</span>
         </a>
     </div>
 
