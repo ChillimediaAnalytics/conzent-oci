@@ -27,3 +27,23 @@ This is a pilot deployment with targeted security repairs and functional checks,
 SMTP/password-recovery delivery and app-managed offsite backup destinations are unconfigured. TCF is disabled (`CMP_ID=0`); this fork does not claim upstream CMP certification. Cloud-only agency billing/portal features are not included.
 
 Unused BuildKit cache cleanup reached other projects' unused build caches as well. No images, containers or volumes were pruned. Their next builds may need to recreate caches. The host had approximately 19 GiB free after cleanup; running services remained healthy.
+
+## Branding release — 20 October 2026
+
+Application image: `chilli-conzent-app:ff59e59`, image ID
+`sha256:4e8ceec285578d3d4a0f141be0c2786961fcfe6645fd0ae49de7673a67618e30`.
+The scanner image is unchanged and also tagged `ff59e59` so the shared release
+variable remains deployable. No schema or consent-runtime changes.
+
+The real Chillimedia SVG wordmark, C favicon/mobile mark and a separate brand
+stylesheet replace the pilot logo and green administration theme. Provenance
+and palette decisions are in [BRANDING.md](BRANDING.md).
+
+Verified: Twig syntax for the three changed templates, CSS parsing, exact original
+SVG bytes/path provenance, light sign-in accessibility checks (contrast, labels,
+image alternatives and button names), real production login, dashboard and banner
+editor, light/dark logo switching, mobile layout and compact navigation.
+White button text on `#7038ac` has a contrast ratio of 7.37:1. Real browser checks
+reported no page JavaScript errors; sign-in responses retain `noindex, nofollow`.
+Database/Redis health checks pass and both the main website and ChilliGPT return
+HTTP 200. The earlier operating limits still apply.

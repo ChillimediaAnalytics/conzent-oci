@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-20",
+  "login": true,
+  "noindex": true,
+  "loginMobile": true,
+  "loginDark": true,
+  "dashboard": true,
+  "dashboardDark": true,
+  "mobile": {
+    "viewport": 390,
+    "documentWidth": 390,
+    "markVisible": "block",
+    "wordmarkVisible": "none",
+    "navWidth": 390
+  },
+  "browserErrors": [],
+  "bannerEditor": true
+}
